@@ -1,0 +1,112 @@
+{
+    "appearance": {
+        "accent": "",
+        "animDuration": 180,
+        "animations": true,
+        "font": "JetBrainsMono Nerd Font",
+        "fontSize": 13,
+        "iconFont": "JetBrainsMono Nerd Font",
+        "opacity": 0.92,
+        "preset": "UnityOS",
+        "radius": 14
+    },
+    "apps": {
+        "launcher": "",
+        "lock": "",
+        "logout": "hyprctl dispatch 'hl.dsp.exit()'",
+        "reboot": "systemctl reboot",
+        "screenshot": "grim -g \"$(slurp)\" - | wl-copy",
+        "shutdown": "systemctl poweroff",
+        "suspend": "systemctl suspend",
+        "terminal": "kitty"
+    },
+    "bar": {
+        "centerOrder": "clock",
+        "clock24h": true,
+        "clockSeconds": false,
+        "dateFormat": "ddd d MMM",
+        "enabled": true,
+        "floating": true,
+        "height": 38,
+        "launcherIcon": "",
+        "leftOrder": "launcher,workspaces,windowTitle",
+        "margin": 6,
+        "position": "top",
+        "rightOrder": "media,tray,stats,status,recording,notifications",
+        "showBattery": true,
+        "showBluetooth": true,
+        "showLauncher": true,
+        "showMedia": true,
+        "showNetwork": true,
+        "showNotifications": true,
+        "showRecording": true,
+        "showStats": false,
+        "showStatus": true,
+        "showTray": true,
+        "showVolume": true,
+        "showWindowTitle": true,
+        "showWorkspaces": true,
+        "windowTitleWidth": 260,
+        "workspaceCount": 5,
+        "workspaceStyle": "dots"
+    },
+    "controlPanel": {
+        "nightLightTemp": 4000,
+        "recordingMode": "region",
+        "showMedia": true,
+        "showPower": true,
+        "showSliders": true,
+        "showStats": true,
+        "showTiles": true,
+        "width": 400
+    },
+    "general": {
+        "osd": true,
+        "osdTimeout": 1500,
+        "weekStartsMonday": true,
+        "welcomeSeen": false
+    },
+    "hyprland": {
+        "accentBorders": true,
+        "activeOpacity": 0.95,
+        "animations": true,
+        "blur": true,
+        "blurPasses": 2,
+        "blurSize": 8,
+        "border_size": 2,
+        "gaps_in": 5,
+        "gaps_out": 12,
+        "inactiveOpacity": 0.95,
+        "manage": true,
+        "rounding": 8,
+        "shadow": true,
+        "shadowPower": 3,
+        "shadowRange": 12
+    },
+    "notifications": {
+        "criticalBypassDnd": true,
+        "dnd": false,
+        "maxPopups": 4,
+        "popups": true,
+        "position": "top-right",
+        "timeout": 6,
+        "width": 360
+    },
+    "unityAgent": {
+        "commands": true,
+        "enabled": true,
+        "files": true,
+        "packages": true,
+        "projects": true,
+        "screenshots": true,
+        "systemErrors": true,
+        "web": true,
+        "weeklyUpdates": true
+    },
+    "wallpaper": {
+        "dim": 0.35,
+        "folder": "~/Pictures/Wallpapers",
+        "image": "",
+        "type": "default"
+    }
+}

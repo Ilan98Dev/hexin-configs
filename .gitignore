@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Backups and editor files
+*.bak
+*.bak.*
+*.old
+*~
+.DS_Store
+
+# Local runtime state (never committed)
+dotfiles/config/hyprunity/scripts/__pycache__/

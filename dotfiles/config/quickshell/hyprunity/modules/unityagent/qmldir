@@ -1,0 +1,9 @@
+module qs.modules.unityagent
+UnityAgentWindow 1.0 UnityAgentWindow.qml
+AgentNeon 1.0 AgentNeon.qml
+NeonEdge 1.0 NeonEdge.qml
+AgentSidebar 1.0 AgentSidebar.qml
+AgentSettingsView 1.0 AgentSettingsView.qml
+ChatBubble 1.0 ChatBubble.qml
+ChatComposer 1.0 ChatComposer.qml
+ChatView 1.0 ChatView.qml

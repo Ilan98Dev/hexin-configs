@@ -1,0 +1,12 @@
+module qs.modules.panels
+Calendar 1.0 Calendar.qml
+CalendarPanel 1.0 CalendarPanel.qml
+ClipboardPanel 1.0 ClipboardPanel.qml
+ControlPanel 1.0 ControlPanel.qml
+KeybindsPanel 1.0 KeybindsPanel.qml
+Launcher 1.0 Launcher.qml
+MediaCard 1.0 MediaCard.qml
+NotificationCenter 1.0 NotificationCenter.qml
+PanelHost 1.0 PanelHost.qml
+PowerButton 1.0 PowerButton.qml
+WallpaperPicker 1.0 WallpaperPicker.qml

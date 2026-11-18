@@ -1,0 +1,6 @@
+module qs.modules.welcome
+Welcome 1.0 Welcome.qml
+KeyCap 1.0 KeyCap.qml
+WelcomeButton 1.0 WelcomeButton.qml
+KeybindCard 1.0 KeybindCard.qml
+FeatureRow 1.0 FeatureRow.qml

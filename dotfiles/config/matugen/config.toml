@@ -1,0 +1,18 @@
+[config]
+version_check = false
+source_color_index = 0
+
+# The shell reads this palette for the "Auto (Matugen)" appearance preset.
+[templates.m3colors]
+input_path = '~/.config/matugen/templates/colors.json'
+output_path = '~/.local/state/quickshell/user/generated/colors.json'
+
+# GTK apps read gtk.css directly. hyprunity-theme-sync also writes its own
+# named colours; these keep plain GTK apps in step with the wallpaper.
+[templates.gtk3]
+input_path = '~/.config/matugen/templates/gtk-3.0/gtk.css'
+output_path = '~/.config/gtk-3.0/gtk.css'
+
+[templates.gtk4]
+input_path = '~/.config/matugen/templates/gtk-4.0/gtk.css'
+output_path = '~/.config/gtk-4.0/gtk.css'
