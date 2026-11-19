@@ -298,8 +298,9 @@ for a true reset.
 ## Credits
 
 Built on [Quickshell](https://quickshell.org) and [Hyprland](https://hyprland.org).
-The UnityOS palette and branding belong to the UnityOS project. Package names and
-defaults target Arch Linux.
+Some code snippets are adapted from [Ryoku](https://ryoku.dev). The UnityOS
+palette and branding belong to the UnityOS project. Package names and defaults
+target Arch Linux.
 
 ## License
 
