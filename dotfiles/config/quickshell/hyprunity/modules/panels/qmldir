@@ -9,4 +9,5 @@ MediaCard 1.0 MediaCard.qml
 NotificationCenter 1.0 NotificationCenter.qml
 PanelHost 1.0 PanelHost.qml
 PowerButton 1.0 PowerButton.qml
+Spotlight 1.0 Spotlight.qml
 WallpaperPicker 1.0 WallpaperPicker.qml

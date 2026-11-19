@@ -30,7 +30,11 @@ commands, install packages and diagnose crashes — always behind an approval ca
   caffeine, game mode, screen recording and power actions.
 - **Notification daemon** — popups, a persistent notification centre, Do Not Disturb,
   critical bypass, clickable actions and per-app icons.
-- **Launcher and clipboard history** — native Quickshell panels, no fuzzel or rofi.
+- **Launcher and Spotlight** — `SUPER + Space` lists every app; `ALT + Space`
+  searches apps, files in your home folders, quick maths, shell actions and the
+  web. Web rows open DuckDuckGo in the browser set under Settings → Commands
+  (defaults to `zen-browser`, falls back to `xdg-open`). No fuzzel or rofi.
+- **Clipboard history** — native Quickshell panel, searchable.
 - **Calendar** — click the clock.
 - **Wallpaper layer** — bundled wallpaper, your own image, or none (let hyprpaper/swww
   show through), with a configurable scrim.
@@ -60,7 +64,7 @@ commands, install packages and diagnose crashes — always behind an approval ca
 | Official repositories | AUR |
 |---|---|
 | `hyprland`, `quickshell`, `hypridle`, `hyprpolkitagent`, `hyprsunset`, `hyprpicker` | `zen-browser-bin` |
-| `xdg-desktop-portal`, `-hyprland`, `-gtk`, `gnome-keyring`, `polkit` | `vesktop` |
+| `xdg-desktop-portal`, `-hyprland`, `-gtk`, `xdg-utils`, `gnome-keyring`, `polkit` | `vesktop` |
 | `wl-clipboard`, `cliphist`, `brightnessctl`, `grim`, `slurp` | `bibata-cursor-theme-bin` |
 | `networkmanager`, `bluez`, `bluez-utils`, `upower`, `libnotify` | `adw-gtk3` |
 | `pipewire`, `pipewire-pulse`, `wireplumber` (skipped if already present) | |
@@ -131,7 +135,8 @@ cheatsheet generated from `~/.config/hypr/hyprunity/90-keybinds.lua`.
 | `SUPER + K` | keybind cheatsheet |
 | `SUPER + ,` | settings |
 | `SUPER + W` | wallpaper picker |
-| `SUPER + Space` / `Alt + Space` | app launcher |
+| `SUPER + Space` | app launcher |
+| `ALT + Space` | Spotlight: apps, files, maths, actions and the web |
 | `SUPER + V` | clipboard history |
 | `SUPER + L` | lock |
 | `SUPER + Shift + N` | do not disturb |
@@ -201,6 +206,7 @@ Everything is scriptable:
 qs ipc -c hyprunity call panels toggle control
 qs ipc -c hyprunity call panels toggle notifications
 qs ipc -c hyprunity call panels toggle launcher
+qs ipc -c hyprunity call panels toggle spotlight
 qs ipc -c hyprunity call panels toggle clipboard
 qs ipc -c hyprunity call panels toggle wallpaper
 qs ipc -c hyprunity call settings toggle
@@ -220,6 +226,7 @@ qs ipc -c hyprunity call shell reload | lock
 
 ```
 install.sh                         installer (Arch / x86_64)
+tests/install-smoke.sh             installer test (stubbed, changes nothing)
 dotfiles/
 ├── bin/
 │   ├── hyprunity-matugen-apply    wallpaper -> palette (shell + GTK + kitty + borders)
@@ -241,6 +248,18 @@ dotfiles/
     │   └── scripts/               UnityAgent daemon + FIFO reader
     └── matugen/                   Auto palette templates
 ```
+
+## Testing
+
+The installer has a smoke test that runs it against a throwaway `HOME` with
+`pacman`, `sudo`, `systemctl`, `hyprctl` and `qs` stubbed out:
+
+```bash
+bash tests/install-smoke.sh
+```
+
+It changes nothing on the real system and covers a fresh install, a reinstall
+over existing files (including backups), and the in-session reload path.
 
 ## Troubleshooting
 

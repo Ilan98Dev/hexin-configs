@@ -466,7 +466,12 @@ LazyLoader {
                                         {
                                             keys: ["SUPER", "SPACE"],
                                             label: "App launcher",
-                                            hint: "Apps, files and quick maths"
+                                            hint: "Every app, by name or keyword"
+                                        },
+                                        {
+                                            keys: ["ALT", "SPACE"],
+                                            label: "Spotlight",
+                                            hint: "Apps, files, maths and the web"
                                         },
                                         {
                                             keys: ["SUPER", "C"],
@@ -482,6 +487,11 @@ LazyLoader {
                                             keys: ["SUPER", ","],
                                             label: "Settings",
                                             hint: "Theme, bar, Hyprland and more"
+                                        },
+                                        {
+                                            keys: ["SUPER", "K"],
+                                            label: "All keybinds",
+                                            hint: "Search every shortcut in the shell"
                                         },
                                         {
                                             keys: ["SUPER", "V"],
@@ -524,7 +534,7 @@ LazyLoader {
 
                             Txt {
                                 Layout.fillWidth: true
-                                text: "Use ← → or the buttons below to browse. Every bind lives in ~/.config/hypr/hyprunity/90-keybinds.lua."
+                                text: "Use ← → to browse · SUPER + K opens the full searchable list any time."
                                 color: Theme.subtext
                                 font.pixelSize: Theme.fontSmall
                             }

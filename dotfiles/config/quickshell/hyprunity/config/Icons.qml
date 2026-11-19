@@ -62,6 +62,7 @@ Singleton {
     readonly property string image: "\uf03e"
     readonly property string layout: "\uf009"
     readonly property string search: "\uf002"
+    readonly property string file: "\uf15b"
     readonly property string clipboard: "\uf0ea"
     readonly property string apps: "\uf009"
     readonly property string gamepad: "\uf11b"

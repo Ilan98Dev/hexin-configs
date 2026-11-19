@@ -5,11 +5,11 @@ import qs.config
 import qs.services
 
 // One transparent full-screen overlay per monitor that hosts every dropdown
-// panel (control centre, notification drawer, calendar, launcher, clipboard
-// history, wallpaper picker, keybind cheatsheet). Clicking outside, or pressing
-// Esc, closes it. The launcher, clipboard history, wallpaper picker and
-// keybind cheatsheet take an exclusive keyboard focus so typing (or the arrow
-// keys) goes to the panel instead of the window underneath.
+// panel (control centre, notification drawer, calendar, launcher, spotlight,
+// clipboard history, wallpaper picker, keybind cheatsheet). Clicking outside,
+// or pressing Esc, closes it. The launcher, spotlight, clipboard history,
+// wallpaper picker and keybind cheatsheet take an exclusive keyboard focus so
+// typing (or the arrow keys) goes to the panel instead of the window underneath.
 Variants {
     model: Quickshell.screens
 
@@ -32,7 +32,7 @@ Variants {
 
         // Panels that take typed input (search fields) or drive themselves
         // with the keyboard need the keyboard exclusively while they are open.
-        readonly property bool typing: win.shown === "launcher" || win.shown === "clipboard" || win.shown === "wallpaper" || win.shown === "keybinds"
+        readonly property bool typing: win.shown === "launcher" || win.shown === "spotlight" || win.shown === "clipboard" || win.shown === "wallpaper" || win.shown === "keybinds"
         // Hang these off the right edge of the screen, under their bar button.
         readonly property bool rightAligned: win.shown === "control" || win.shown === "notifications"
 
@@ -45,6 +45,8 @@ Variants {
                 return wpComp;
             if (name === "launcher")
                 return launchComp;
+            if (name === "spotlight")
+                return spotlightComp;
             if (name === "clipboard")
                 return clipComp;
             if (name === "keybinds")
@@ -120,6 +122,22 @@ Variants {
                 }
             }
 
+            // Spotlight dims the desktop behind it; the other panels hang off
+            // the bar and leave the wallpaper alone.
+            Rectangle {
+                anchors.fill: parent
+                color: Qt.rgba(0, 0, 0, 0.32)
+                visible: win.shown === "spotlight"
+                opacity: win.revealed ? 1 : 0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.anim
+                        easing.type: Easing.OutCubic
+                    }
+                }
+            }
+
             Loader {
                 id: loader
                 active: win.visible
@@ -130,7 +148,7 @@ Variants {
                 // drawer, centred for the clock's calendar, the launcher,
                 // the clipboard, the wallpaper picker and the keybinds list
                 x: win.rightAligned ? win.width - width - 12 : Math.round((win.width - width) / 2)
-                y: (win.shown === "wallpaper" || win.shown === "keybinds") ? Math.round((win.height - height) / 2) : (win.atTop ? win.edgeGap : win.height - height - win.edgeGap)
+                y: win.shown === "spotlight" ? Math.round(win.height * 0.16) : (win.shown === "wallpaper" || win.shown === "keybinds") ? Math.round((win.height - height) / 2) : (win.atTop ? win.edgeGap : win.height - height - win.edgeGap)
 
                 // A small bloom as the panel appears, and a quick fade when the
                 // open panel is swapped for another one.
@@ -207,6 +225,13 @@ Variants {
         Component {
             id: launchComp
             Launcher {
+                maxHeight: win.maxH
+            }
+        }
+
+        Component {
+            id: spotlightComp
+            Spotlight {
                 maxHeight: win.maxH
             }
         }

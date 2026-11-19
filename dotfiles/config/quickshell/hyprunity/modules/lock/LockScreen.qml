@@ -396,7 +396,10 @@ Rectangle {
                 font.pixelSize: Theme.fontSize + 3
                 selectionColor: Theme.accent
                 selectedTextColor: Theme.onAccent
-                passwordMaskDelay: 300
+                // Mask every character the instant it is typed. Qt's default is
+                // 0; the explicit value keeps the behaviour if a platform theme
+                // ever raises it.
+                passwordMaskDelay: 0
                 clip: true
 
                 onAccepted: root.tryUnlock()

@@ -121,7 +121,9 @@ LazyLoader {
             // ───── sidebar ─────
             Rectangle {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 230
+                // Wide enough for the longest label and the footer note, which
+                // used to run into the right edge at 230.
+                Layout.preferredWidth: 252
                 color: Theme.mantle
 
                 ColumnLayout {
@@ -221,7 +223,13 @@ LazyLoader {
                         text: "Changes are saved automatically"
                         color: Theme.subtext
                         font.pixelSize: Theme.fontSmall
+                        elide: Text.ElideRight
+                        Layout.fillWidth: true
                         Layout.leftMargin: 8
+                        Layout.rightMargin: 8
+                        // Same breathing room as the left indent, so the note
+                        // never looks pinned to the bottom edge.
+                        Layout.bottomMargin: 8
                     }
                 }
             }

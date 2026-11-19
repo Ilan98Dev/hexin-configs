@@ -196,6 +196,8 @@ Singleton {
                 // an external launcher (fuzzel, rofi, …).
                 property string launcher: ""
                 property string terminal: "kitty"
+                // Used by Spotlight's web rows (search / open a URL).
+                property string browser: "zen-browser"
                 property string screenshot: "grim -g \"$(slurp)\" - | wl-copy"
                 // Empty = use hyprunity's built-in Quickshell lock screen.
                 property string lock: ""

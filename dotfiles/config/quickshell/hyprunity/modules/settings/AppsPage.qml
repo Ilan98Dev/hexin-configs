@@ -31,6 +31,16 @@ SettingsPage {
         }
     }
     SettingRow {
+        title: "Browser"
+        description: "Opened by Spotlight for web searches and URLs."
+
+        Input {
+            implicitWidth: 300
+            text: Config.apps.browser
+            onCommitted: v => Config.apps.browser = v
+        }
+    }
+    SettingRow {
         title: "Screenshot"
         description: "Runs shortly after the panel closes."
 

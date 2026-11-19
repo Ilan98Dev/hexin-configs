@@ -9,7 +9,7 @@ import qs.config
 Singleton {
     id: root
 
-    property string active: ""       // "" | "notifications" | "calendar" | "control" | "launcher" | "clipboard" | "wallpaper" | "keybinds"
+    property string active: ""       // "" | "notifications" | "calendar" | "control" | "launcher" | "spotlight" | "clipboard" | "wallpaper" | "keybinds"
     property string screenName: ""
     property bool settingsOpen: false
     // Optional page key to reveal when the settings window opens. Cleared by

@@ -324,6 +324,11 @@ ShellRoot {
         onPressed: Actions.launcher()
     }
     GlobalShortcut {
+        name: "spotlight"
+        description: "Toggle Spotlight search"
+        onPressed: Panels.toggle("spotlight")
+    }
+    GlobalShortcut {
         name: "clipboard"
         description: "Toggle the clipboard history"
         onPressed: Actions.clipboard()

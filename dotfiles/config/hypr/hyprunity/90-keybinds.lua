@@ -34,7 +34,7 @@ hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd(PROGRAMS.music))
 --   hl.dsp.exec_cmd("qs ipc -c hyprunity call panels toggle launcher")
 --   hl.dsp.exec_cmd("qs ipc -c hyprunity call panels toggle clipboard")
 hl.bind(mainMod .. " + SPACE", hl.dsp.global("quickshell:launcher")) -- [shell] App launcher
-hl.bind("ALT + SPACE", hl.dsp.global("quickshell:launcher")) -- [shell] App launcher
+hl.bind("ALT + SPACE", hl.dsp.global("quickshell:spotlight")) -- [shell] Spotlight: apps, files, maths, web
 hl.bind(mainMod .. " + V", hl.dsp.global("quickshell:clipboard")) -- [shell] Clipboard history
 
 -- ── windows ────────────────────────────────────────────────────────
