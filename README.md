@@ -47,7 +47,7 @@ commands, install packages and diagnose crashes — always behind an approval ca
   with a **Fix with AI** button that opens UnityAgent with the details filled in.
 - **UnityAgent** — provider-agnostic chat (OpenAI, Google, custom OpenAI-compatible
   endpoints), tool use with approvals, projects under `~/Projects/UnityAgent`,
-  web fetch/search, screenshots and package management.
+  web fetch/search, screenshots, ydotool mouse control and package management.
 - **Extras** — keybind cheatsheet (`SUPER + K`), first-run tour, OSD, screen recording,
   night light, caffeine mode and game mode.
 
@@ -69,7 +69,7 @@ commands, install packages and diagnose crashes — always behind an approval ca
 | `networkmanager`, `bluez`, `bluez-utils`, `upower`, `libnotify` | `adw-gtk3` |
 | `pipewire`, `pipewire-pulse`, `wireplumber` (skipped if already present) | |
 | `kitty`, `nautilus`, `pavucontrol`, `spotify-launcher`, `neovim` | |
-| `matugen`, `python`, `lua`, `gpu-screen-recorder`, `pacman-contrib` | |
+| `matugen`, `python`, `lua`, `ydotool`, `gpu-screen-recorder`, `pacman-contrib` | |
 | `ttf-jetbrains-mono-nerd`, `qt6ct`, `git`, `base-devel` | |
 
 The AUR packages are optional: without them the shell still runs, but the default
@@ -86,13 +86,17 @@ cd Hyprunity
 The installer:
 
 1. checks that it is running on Arch Linux / x86_64, as a normal user;
-2. installs the official packages with `pacman`, then the AUR packages with
+2. asks whether to run a full system update (`pacman -Syu`) or just install the
+   packages (`pacman -S`), and whether to back up the files it replaces;
+3. installs the official packages with `pacman`, then the AUR packages with
    `yay` or `paru` if one is available;
-3. copies the configs into `~/.config` and the helper scripts into `~/.local/bin`;
-4. moves anything it replaces into
-   `~/.local/state/hyprunity/install-backup-<timestamp>`;
-5. adds the palette include to `~/.config/kitty/kitty.conf`;
-6. enables `NetworkManager` and `bluetooth`, reloads Hyprland and starts the shell.
+4. copies the configs into `~/.config` and the helper scripts into `~/.local/bin`;
+5. moves anything it replaces into
+   `~/.local/state/hyprunity/install-backup-<timestamp>` (or deletes it if you
+   declined the backup);
+6. adds the palette include to `~/.config/kitty/kitty.conf`;
+7. enables `NetworkManager`, `bluetooth` and the user `ydotool.service`, reloads
+   Hyprland and starts the shell.
 
 It **never touches your wallpaper folder**. The default wallpaper is bundled with
 the shell; Settings → Wallpaper points at `~/Pictures/Wallpapers` only when you
@@ -105,10 +109,11 @@ otherwise be silently ignored anyway.
 After the installer, **log out and back in** (or start Hyprland if you have not yet).
 The first-run tour opens on first launch.
 
-Re-running the installer is safe: it backs up what it replaces, so your previous
-configs stay in the backup folder. Note that it ships the default
-`~/.config/hyprunity/settings.json`, so a reinstall resets the shell settings to
-those defaults (your old file is in the backup).
+Re-running the installer is safe when backups are on (the default): it moves what
+it replaces into the backup folder, so your previous configs stay there. If you
+turn backups off, replaced files are deleted instead. Note that it ships the
+default `~/.config/hyprunity/settings.json`, so a reinstall resets the shell
+settings to those defaults (your old file is in the backup).
 
 ### Manual installation
 
@@ -187,8 +192,15 @@ in this repository and not in `settings.json`.
 
 The daemon starts with the session when the universal switch is on. Read-only tools
 (listing, reading, searching, web fetch, screenshots) run immediately; project
-creation, file writes, package installs and shell commands show an approval card
-first. Per-feature switches in Settings → UnityAgent remove the matching tools.
+creation, file writes, package installs, shell commands and mouse clicks show an
+approval card first. Per-feature switches in Settings → UnityAgent remove the
+matching tools.
+
+With **Mouse control** on, the agent can see the screen with `screenshot` and drive
+the pointer with `ydotool`: move, scroll, and click (moves and scrolling run
+immediately, clicks ask for approval). The installer installs `ydotool` and enables
+the user service; if you set it up by hand, run
+`systemctl --user enable --now ydotool.service`.
 
 ### Auto (Matugen) palette
 

@@ -97,6 +97,7 @@
         "commands": true,
         "enabled": true,
         "files": true,
+        "mouse": true,
         "packages": true,
         "projects": true,
         "screenshots": true,

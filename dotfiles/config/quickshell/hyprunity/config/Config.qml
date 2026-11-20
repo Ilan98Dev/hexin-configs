@@ -229,6 +229,7 @@ Singleton {
                 property bool weeklyUpdates: true    // weekly package-update check
                 property bool web: true              // fetch_url + web_search
                 property bool screenshots: true      // screenshot
+                property bool mouse: true            // ydotool pointer, click, scroll
                 property bool systemErrors: true     // crash/service alerts with "Fix with AI"
             }
         }

@@ -28,8 +28,10 @@ Responses
   {"type": "proposal", "title", "message", "code"}      (legacy path)
 
 The agent loop calls the provider with native tools. Read-only tools run at
-once; create_project/write_file/edit_file/run_command send an `approval` event
-and block until the UI answers with `approve` (or the request is stopped).
+once; create_project/write_file/edit_file/run_command and mouse_click send an
+`approval` event and block until the UI answers with `approve` (or the request
+is stopped). Mouse moves and wheel scrolling run immediately, using ydotool and
+the logical monitor layout that the screenshot tool reports.
 Coding projects live under ~/Projects/UnityAgent; run_command takes an optional
 `cwd` (a project name or absolute path) so builds and tests run there.
 
@@ -162,7 +164,7 @@ def resolve_cwd(cwd):
 
 # Tools that change the machine. The daemon asks the UI before running one and
 # waits for the user; read-only tools run immediately.
-APPROVAL_TOOLS = {"run_command", "write_file", "edit_file", "create_project"}
+APPROVAL_TOOLS = {"run_command", "write_file", "edit_file", "create_project", "mouse_click"}
 
 _approvals = {}
 _approval_lock = threading.Lock()
@@ -496,7 +498,7 @@ def handle_run(req):
 # ───────────────────────────── tools ─────────────────────────────
 #
 # The agent calls these natively. Read-only tools run as soon as the model asks;
-# the three in APPROVAL_TOOLS are held until the UI answers an approval card.
+# the entries in APPROVAL_TOOLS are held until the UI answers an approval card.
 
 TOOL_SPECS = [
     {
@@ -560,13 +562,51 @@ TOOL_SPECS = [
     },
     {
         "name": "screenshot",
-        "description": "Capture the screen and return it as an image you can see. Read-only and runs immediately. Captures the whole desktop by default; use `region` or `monitor` to narrow it. Use this when the user asks what is on screen or when a visual check helps.",
+        "description": "Capture the screen and return it as an image you can see. Read-only and runs immediately. Captures the whole desktop by default; use `region` or `monitor` to narrow it. Use this when the user asks what is on screen, before clicking anything with the mouse tools, or when a visual check helps. The result includes the monitor layout in logical coordinates for mouse_move and mouse_click.",
         "parameters": {
             "type": "object",
             "properties": {
                 "region": {"type": "string", "description": "Optional grim geometry, e.g. `100,100 800x600`."},
                 "monitor": {"type": "string", "description": "Optional output name, e.g. eDP-1."},
                 "cursor": {"type": "boolean", "description": "Include the mouse cursor. Defaults to false."},
+            },
+            "required": [],
+        },
+    },
+    {
+        "name": "mouse_move",
+        "description": "Move the mouse pointer to absolute desktop coordinates. Runs immediately, without an approval card. Coordinates are in the compositor's logical layout: the screenshot tool reports each monitor's origin, size and scale, so use those numbers to turn what you see into x/y. If the next step is a click, prefer passing x/y to mouse_click instead of moving first.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "x": {"type": "integer", "description": "Absolute X coordinate in the desktop layout."},
+                "y": {"type": "integer", "description": "Absolute Y coordinate in the desktop layout."},
+            },
+            "required": ["x", "y"],
+        },
+    },
+    {
+        "name": "mouse_click",
+        "description": "Click a mouse button, optionally moving the pointer to x,y first. This needs the user's approval. Take a screenshot first so you know exactly what is under the pointer, and explain what you are about to click.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "x": {"type": "integer", "description": "Optional absolute X coordinate to move to before clicking."},
+                "y": {"type": "integer", "description": "Optional absolute Y coordinate to move to before clicking."},
+                "button": {"type": "string", "enum": ["left", "right", "middle"], "description": "Mouse button. Defaults to left."},
+                "count": {"type": "integer", "description": "Number of clicks, 1-5. Defaults to 1."},
+            },
+            "required": [],
+        },
+    },
+    {
+        "name": "mouse_scroll",
+        "description": "Scroll the mouse wheel at the current pointer position. Runs immediately, without an approval card. Use it to read more of a page or list after a screenshot.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "direction": {"type": "string", "enum": ["up", "down", "left", "right"], "description": "Wheel direction. Defaults to down."},
+                "amount": {"type": "integer", "description": "Number of wheel steps, 1-50. Defaults to 3."},
             },
             "required": [],
         },
@@ -635,6 +675,9 @@ FEATURE_TOOLS = {
     "fetch_url": "web",
     "web_search": "web",
     "screenshot": "screenshots",
+    "mouse_move": "mouse",
+    "mouse_click": "mouse",
+    "mouse_scroll": "mouse",
 }
 
 FEATURE_LABELS = {
@@ -644,6 +687,7 @@ FEATURE_LABELS = {
     "packages": "package management",
     "web": "web access",
     "screenshots": "screen capture",
+    "mouse": "mouse control",
 }
 
 
@@ -1532,7 +1576,163 @@ def tool_screenshot(args):
         "width": size[0] if size else None,
         "height": size[1] if size else None,
     }
-    return True, "Screenshot captured (%s, %s): %s" % (target, dims, path), image
+    message = "Screenshot captured (%s, %s): %s" % (target, dims, path)
+    layout = _monitor_geometry()
+    if layout:
+        message += "\nMonitors (logical coordinates for the mouse tools): " + layout
+    return True, message, image
+
+
+def _monitor_geometry():
+    """Describe the Hyprland monitor layout for mouse coordinates."""
+    try:
+        proc = subprocess.run(
+            ["hyprctl", "-j", "monitors"],
+            capture_output=True, text=True, timeout=5,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    if proc.returncode != 0:
+        return ""
+    try:
+        monitors = json.loads(proc.stdout or "[]")
+    except ValueError:
+        return ""
+    parts = []
+    for monitor in monitors:
+        if not isinstance(monitor, dict):
+            continue
+        scale = monitor.get("scale", 1) or 1
+        width = monitor.get("width", 0)
+        height = monitor.get("height", 0)
+        logical_w = int(round(width / scale))
+        logical_h = int(round(height / scale))
+        parts.append(
+            "%s at %s,%s %sx%s scale %s (logical %sx%s)" % (
+                monitor.get("name") or "?",
+                monitor.get("x", 0),
+                monitor.get("y", 0),
+                width,
+                height,
+                scale,
+                logical_w,
+                logical_h,
+            )
+        )
+    return "; ".join(parts)
+
+
+# ───────────────────────────── mouse (ydotool) ─────────────────────────────
+#
+# ydotool talks to ydotoold over a socket and injects real input events, so the
+# agent can drive anything on screen — not just this shell. Absolute moves use
+# the compositor's logical layout, the same coordinates the screenshot tool
+# reports. Clicks need approval; moves and scrolling do not.
+
+MOUSE_BUTTONS = {
+    "left": "0xC0",    # down + up
+    "right": "0xC1",
+    "middle": "0xC2",
+}
+
+
+def _ydotool(args, timeout=10):
+    try:
+        proc = subprocess.run(
+            ["ydotool"] + args, capture_output=True, text=True, timeout=timeout
+        )
+    except FileNotFoundError:
+        return False, "ydotool is not installed. Install it with `sudo pacman -S ydotool`."
+    except subprocess.TimeoutExpired:
+        return False, "ydotool timed out."
+    except OSError as exc:
+        return False, "ydotool failed: %s" % exc
+    if proc.returncode == 0:
+        return True, ""
+    detail = (proc.stderr or proc.stdout or "").strip()
+    low = detail.lower()
+    if "socket" in low or "connect" in low or "ydotoold" in low:
+        return False, "ydotoold is not running. Start it with `systemctl --user enable --now ydotool.service`."
+    return False, "ydotool failed: %s" % (detail or "exit code %d" % proc.returncode)
+
+
+def _mouse_coord(args, key):
+    value = args.get(key)
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None, "%s must be an integer" % key
+    if value < 0 or value > 100000:
+        return None, "%s is out of range" % key
+    return value, ""
+
+
+def _move_pointer(x, y):
+    return _ydotool(["mousemove", "--absolute", "-x", str(x), "-y", str(y)])
+
+
+def tool_mouse_move(args):
+    x, err = _mouse_coord(args, "x")
+    if err:
+        return False, err
+    y, err = _mouse_coord(args, "y")
+    if err:
+        return False, err
+    ok, err = _move_pointer(x, y)
+    if not ok:
+        return False, err
+    return True, "Moved the pointer to %d,%d." % (x, y)
+
+
+def tool_mouse_click(args):
+    button = str(args.get("button") or "left").strip().lower()
+    if button not in MOUSE_BUTTONS:
+        return False, "button must be left, right or middle"
+    count = args.get("count", 1)
+    if isinstance(count, bool) or not isinstance(count, int) or not (1 <= count <= 5):
+        return False, "count must be an integer between 1 and 5"
+
+    moved = ""
+    if args.get("x") is not None or args.get("y") is not None:
+        x, err = _mouse_coord(args, "x")
+        if err:
+            return False, "give both x and y, or neither (%s)" % err
+        y, err = _mouse_coord(args, "y")
+        if err:
+            return False, "give both x and y, or neither (%s)" % err
+        ok, err = _move_pointer(x, y)
+        if not ok:
+            return False, err
+        moved = " at %d,%d" % (x, y)
+
+    cmd = ["click"]
+    if count > 1:
+        cmd += ["-r", str(count), "-D", "60"]
+    cmd.append(MOUSE_BUTTONS[button])
+    ok, err = _ydotool(cmd)
+    if not ok:
+        return False, err
+    label = {"left": "Left", "right": "Right", "middle": "Middle"}[button]
+    times = " ×%d" % count if count > 1 else ""
+    return True, "%s-clicked%s%s." % (label, times, moved)
+
+
+def tool_mouse_scroll(args):
+    direction = str(args.get("direction") or "down").strip().lower()
+    amount = args.get("amount", 3)
+    if isinstance(amount, bool) or not isinstance(amount, int) or not (1 <= amount <= 50):
+        return False, "amount must be an integer between 1 and 50"
+    axis = {
+        "up": (0, amount),
+        "down": (0, -amount),
+        "right": (amount, 0),
+        "left": (-amount, 0),
+    }
+    if direction not in axis:
+        return False, "direction must be up, down, left or right"
+    dx, dy = axis[direction]
+    ok, err = _ydotool(["mousemove", "--wheel", "-x", str(dx), "-y", str(dy)])
+    if not ok:
+        return False, err
+    return True, "Scrolled %s by %d." % (direction, amount)
 
 
 def tool_write_file(args):
@@ -1820,6 +2020,9 @@ TOOL_FUNCS = {
     "fetch_url": tool_fetch_url,
     "web_search": tool_web_search,
     "screenshot": tool_screenshot,
+    "mouse_move": tool_mouse_move,
+    "mouse_click": tool_mouse_click,
+    "mouse_scroll": tool_mouse_scroll,
     "create_project": tool_create_project,
     "write_file": tool_write_file,
     "edit_file": tool_edit_file,

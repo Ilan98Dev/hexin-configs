@@ -17,7 +17,7 @@ check(){ if eval "$2"; then ok "$1"; else bad "$1"; fi; }
 
 mkdir -p "$STUB" "$FAKE"
 
-for name in sudo pacman systemctl hyprctl qs; do
+for name in sudo pacman systemctl hyprctl qs modprobe pkill; do
   case "$name" in
     sudo) body='#!/bin/sh\nexec "$@"' ;;
     *)    body='#!/bin/sh\necho "'"$name"' $*" >> "$SMOKE_LOG"\nexit 0' ;;
@@ -46,6 +46,9 @@ check "matugen templates installed" '[ -d "$FAKE/.config/matugen" ]'
 check "helper scripts executable" '[ -x "$FAKE/.local/bin/hyprunity-theme-sync" ] && [ -x "$FAKE/.local/bin/hyprunity-matugen-apply" ]'
 check "kitty include written" 'grep -q "include hyprunity-theme.conf" "$FAKE/.config/kitty/kitty.conf"'
 check "xdg-utils requested" 'grep -q "xdg-utils" "$LOG"'
+check "ydotool requested" 'grep -q "ydotool" "$LOG"'
+check "full update used by default" 'grep -q "pacman -Syu" "$LOG"'
+check "ydotoold user service enabled" 'grep -q "systemctl --user enable --now ydotool.service" "$LOG"'
 check "zen-browser-bin requested" 'grep -q "zen-browser-bin" "$LOG"'
 check "spotlight shipped" '[ -f "$FAKE/.config/quickshell/hyprunity/modules/panels/Spotlight.qml" ]'
 
@@ -68,6 +71,17 @@ run_install inside
 check "session install exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
 check "hyprctl reload called" 'grep -q "hyprctl reload" "$LOG"'
 check "shell reload requested" 'grep -q "qs ipc -c hyprunity call shell reload" "$LOG"'
+check "agent daemon restarted" 'grep -q "pkill -f \^python3 .*unityagentd" "$LOG"'
+
+echo "== interactive: decline update and backups"
+: >"$LOG"
+BEFORE=$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)
+printf 'n\nn\n' | script -qec "env -i HOME='$FAKE' PATH='$STUB:/usr/bin:/bin' SMOKE_LOG='$LOG' TERM=dumb bash '$REPO/install.sh'" /dev/null >"$WORK/tty.log" 2>&1
+echo $? >"$WORK/rc"
+check "interactive install exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
+check "declined update runs pacman -S" 'grep -q "pacman -S --needed" "$LOG" && ! grep -q "pacman -Syu" "$LOG"'
+check "declined backups create no folder" '[ "$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)" -eq "$BEFORE" ]'
+check "config still installed without backups" '[ -f "$FAKE/.config/quickshell/hyprunity/shell.qml" ]'
 
 echo
 echo "PASS=$PASS FAIL=$FAIL"

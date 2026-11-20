@@ -65,6 +65,12 @@ Item {
             return "Web search";
         case "screenshot":
             return "Screenshot";
+        case "mouse_move":
+            return "Mouse move";
+        case "mouse_click":
+            return "Mouse click";
+        case "mouse_scroll":
+            return "Mouse scroll";
         case "create_project":
             return "Create project";
         case "write_file":
@@ -100,6 +106,16 @@ Item {
             return a.query || "";
         case "screenshot":
             return a.region ? "Region: " + a.region : (a.monitor ? "Monitor: " + a.monitor : "Whole screen");
+        case "mouse_move":
+            return "To: " + (a.x !== undefined ? a.x : "?") + ", " + (a.y !== undefined ? a.y : "?");
+        case "mouse_click": {
+            const at = (a.x !== undefined && a.y !== undefined) ? "At: " + a.x + ", " + a.y + "\n" : "At the current pointer\n";
+            const button = a.button || "left";
+            const count = (a.count && a.count > 1) ? " ×" + a.count : "";
+            return at + "Button: " + button + count;
+        }
+        case "mouse_scroll":
+            return "Direction: " + (a.direction || "down") + " ×" + (a.amount || 3);
         case "write_file":
             return (a.path || "") + (a.content ? "\n\n" + truncate(a.content, 4000) : "");
         case "edit_file":

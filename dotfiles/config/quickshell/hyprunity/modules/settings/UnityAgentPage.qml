@@ -160,6 +160,17 @@ SettingsPage {
         }
     }
 
+    SettingRow {
+        opacity: root.agentOn ? 1 : 0.55
+        title: "Mouse control"
+        description: "See the screen and drive the pointer, clicks and scrolling with ydotool. Clicks always ask for approval. Requires the ydotool service, which the installer sets up."
+
+        Toggle {
+            checked: root.ua.mouse
+            onToggled: v => root.ua.mouse = v
+        }
+    }
+
     SectionLabel {
         text: "System errors"
     }
