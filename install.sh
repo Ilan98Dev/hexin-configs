@@ -160,12 +160,17 @@ fi
 # for the current user so the agent can inject input without root.
 if command -v ydotool >/dev/null 2>&1; then
   log "Enabling the ydotool daemon for UnityAgent mouse control…"
+  if ! id -nG "$(id -un)" | tr ' ' '\n' | grep -qx input; then
+    log "Adding $(id -un) to the input group (ydotoold needs /dev/uinput)…"
+    sudo usermod -aG input "$(id -un)" ||
+      warn "Could not add $(id -un) to the input group. Run: sudo usermod -aG input $(id -un)"
+  fi
   sudo modprobe uinput >/dev/null 2>&1 ||
     warn "Could not load the uinput module; mouse control may need a reboot."
   if systemctl --user enable --now ydotool.service >/dev/null 2>&1; then
     log "ydotoold is running as a user service."
   else
-    warn "Could not start ydotoold. Run: systemctl --user enable --now ydotool.service"
+    warn "Could not start ydotoold yet. After logging out and back in, run: systemctl --user enable --now ydotool.service"
   fi
 else
   warn "ydotool was not installed; UnityAgent mouse control will be unavailable."

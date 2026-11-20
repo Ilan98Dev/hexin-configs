@@ -95,8 +95,8 @@ The installer:
    `~/.local/state/hyprunity/install-backup-<timestamp>` (or deletes it if you
    declined the backup);
 6. adds the palette include to `~/.config/kitty/kitty.conf`;
-7. enables `NetworkManager`, `bluetooth` and the user `ydotool.service`, reloads
-   Hyprland and starts the shell.
+7. enables `NetworkManager`, `bluetooth` and the user `ydotool.service` (adding
+   you to the `input` group if needed), reloads Hyprland and starts the shell.
 
 It **never touches your wallpaper folder**. The default wallpaper is bundled with
 the shell; Settings → Wallpaper points at `~/Pictures/Wallpapers` only when you
@@ -198,9 +198,9 @@ matching tools.
 
 With **Mouse control** on, the agent can see the screen with `screenshot` and drive
 the pointer with `ydotool`: move, scroll, and click (moves and scrolling run
-immediately, clicks ask for approval). The installer installs `ydotool` and enables
-the user service; if you set it up by hand, run
-`systemctl --user enable --now ydotool.service`.
+immediately, clicks ask for approval). The installer installs `ydotool`, adds you
+to the `input` group and enables the user service; if you set it up by hand, run
+`sudo usermod -aG input "$USER"` and `systemctl --user enable --now ydotool.service`.
 
 ### Auto (Matugen) palette
 

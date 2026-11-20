@@ -17,7 +17,7 @@ check(){ if eval "$2"; then ok "$1"; else bad "$1"; fi; }
 
 mkdir -p "$STUB" "$FAKE"
 
-for name in sudo pacman systemctl hyprctl qs modprobe pkill; do
+for name in sudo pacman systemctl hyprctl qs modprobe pkill usermod; do
   case "$name" in
     sudo) body='#!/bin/sh\nexec "$@"' ;;
     *)    body='#!/bin/sh\necho "'"$name"' $*" >> "$SMOKE_LOG"\nexit 0' ;;
