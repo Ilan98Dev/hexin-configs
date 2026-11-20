@@ -64,16 +64,17 @@ commands, install packages and diagnose crashes — always behind an approval ca
 | Official repositories | AUR |
 |---|---|
 | `hyprland`, `quickshell`, `hypridle`, `hyprpolkitagent`, `hyprsunset`, `hyprpicker` | `zen-browser-bin` |
-| `xdg-desktop-portal`, `-hyprland`, `-gtk`, `xdg-utils`, `gnome-keyring`, `polkit` | `vesktop` |
-| `wl-clipboard`, `cliphist`, `brightnessctl`, `grim`, `slurp` | `bibata-cursor-theme-bin` |
-| `networkmanager`, `bluez`, `bluez-utils`, `upower`, `libnotify` | `adw-gtk3` |
+| `xdg-desktop-portal`, `-hyprland`, `-gtk`, `xdg-utils`, `gnome-keyring`, `polkit` | `bibata-cursor-theme-bin` |
+| `wl-clipboard`, `cliphist`, `brightnessctl`, `grim`, `slurp` | `adw-gtk3` |
 | `pipewire`, `pipewire-pulse`, `wireplumber` (skipped if already present) | |
+| `networkmanager`, `bluez`, `bluez-utils`, `upower`, `libnotify` | |
 | `kitty`, `nautilus`, `pavucontrol`, `spotify-launcher`, `neovim` | |
 | `matugen`, `python`, `lua`, `ydotool`, `gpu-screen-recorder`, `pacman-contrib` | |
 | `ttf-jetbrains-mono-nerd`, `qt6ct`, `git`, `base-devel` | |
 
 The AUR packages are optional: without them the shell still runs, but the default
-browser (`zen-browser`), Discord client (`vesktop`) and cursor theme will be missing.
+browser (`zen-browser`) and cursor theme will be missing. A Discord client is not
+installed; add `vesktop-bin` from the AUR yourself if you want one.
 
 ## Installation
 

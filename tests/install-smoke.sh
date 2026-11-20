@@ -47,6 +47,7 @@ check "helper scripts executable" '[ -x "$FAKE/.local/bin/hyprunity-theme-sync" 
 check "kitty include written" 'grep -q "include hyprunity-theme.conf" "$FAKE/.config/kitty/kitty.conf"'
 check "xdg-utils requested" 'grep -q "xdg-utils" "$LOG"'
 check "ydotool requested" 'grep -q "ydotool" "$LOG"'
+check "vesktop not installed" '! grep -q "vesktop" "$LOG"'
 check "full update used by default" 'grep -q "pacman -Syu" "$LOG"'
 check "ydotoold user service enabled" 'grep -q "systemctl --user enable --now ydotool.service" "$LOG"'
 check "zen-browser-bin requested" 'grep -q "zen-browser-bin" "$LOG"'

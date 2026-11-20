@@ -124,7 +124,6 @@ fi
 
 AUR_PKGS=(
   zen-browser-bin
-  vesktop
   bibata-cursor-theme-bin
   adw-gtk3
 )
@@ -152,7 +151,7 @@ if [ -n "$AUR_HELPER" ]; then
 else
   warn "No AUR helper (yay/paru) found. Install these when you can:"
   printf '    %s\n' "${AUR_PKGS[*]}"
-  warn "The shell works without them; the browser, Discord client and cursor theme will be missing."
+  warn "The shell works without them; the browser and cursor theme will be missing."
 fi
 
 # UnityAgent uses ydotool to move the pointer and click. The package ships a
