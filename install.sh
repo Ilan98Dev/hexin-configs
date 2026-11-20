@@ -56,6 +56,7 @@ log "Target: $(. /etc/os-release 2>/dev/null && printf '%s' "${PRETTY_NAME:-Arch
 # the original installer. Interactive runs get a real choice.
 FULL_UPDATE=1
 BACKUP=1
+WITH_AUR=1
 if [ -t 0 ]; then
   printf '%s==>%s Run a full system update first (pacman -Syu)? [Y/n] ' "$G" "$N"
   read -r reply || reply=""
@@ -67,6 +68,12 @@ if [ -t 0 ]; then
   read -r reply || reply=""
   case "$reply" in
     [nN]*) BACKUP=0 ;;
+  esac
+
+  printf '%s==>%s Install the optional AUR packages (browser, cursor theme)? [Y/n] ' "$G" "$N"
+  read -r reply || reply=""
+  case "$reply" in
+    [nN]*) WITH_AUR=0 ;;
   esac
 fi
 
@@ -145,7 +152,11 @@ for helper in yay paru; do
   fi
 done
 
-if [ -n "$AUR_HELPER" ]; then
+if [ "$WITH_AUR" -eq 0 ]; then
+  log "Skipping the optional AUR packages."
+  warn "The shell works without them; the browser and cursor theme will be missing."
+  printf '    %s\n' "${AUR_PKGS[*]}"
+elif [ -n "$AUR_HELPER" ]; then
   log "Installing AUR packages with $AUR_HELPER…"
   "$AUR_HELPER" -S --needed --noconfirm "${AUR_PKGS[@]}"
 else

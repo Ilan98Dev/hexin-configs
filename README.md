@@ -87,9 +87,10 @@ The installer:
 
 1. checks that it is running on Arch Linux / x86_64, as a normal user;
 2. asks whether to run a full system update (`pacman -Syu`) or just install the
-   packages (`pacman -S`), and whether to back up the files it replaces;
+   packages (`pacman -S`), whether to back up the files it replaces, and whether
+   to install the optional AUR packages;
 3. installs the official packages with `pacman`, then the AUR packages with
-   `yay` or `paru` if one is available;
+   `yay` or `paru` if you said yes and one is available;
 4. copies the configs into `~/.config` and the helper scripts into `~/.local/bin`;
 5. moves anything it replaces into
    `~/.local/state/hyprunity/install-backup-<timestamp>` (or deletes it if you

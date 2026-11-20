@@ -17,7 +17,7 @@ check(){ if eval "$2"; then ok "$1"; else bad "$1"; fi; }
 
 mkdir -p "$STUB" "$FAKE"
 
-for name in sudo pacman systemctl hyprctl qs modprobe pkill usermod; do
+for name in sudo pacman systemctl hyprctl qs modprobe pkill usermod yay; do
   case "$name" in
     sudo) body='#!/bin/sh\nexec "$@"' ;;
     *)    body='#!/bin/sh\necho "'"$name"' $*" >> "$SMOKE_LOG"\nexit 0' ;;
@@ -50,7 +50,7 @@ check "ydotool requested" 'grep -q "ydotool" "$LOG"'
 check "vesktop not installed" '! grep -q "vesktop" "$LOG"'
 check "full update used by default" 'grep -q "pacman -Syu" "$LOG"'
 check "ydotoold user service enabled" 'grep -q "systemctl --user enable --now ydotool.service" "$LOG"'
-check "zen-browser-bin requested" 'grep -q "zen-browser-bin" "$LOG"'
+check "zen-browser-bin requested" 'grep -q "yay -S --needed --noconfirm.*zen-browser-bin" "$LOG"'
 check "spotlight shipped" '[ -f "$FAKE/.config/quickshell/hyprunity/modules/panels/Spotlight.qml" ]'
 
 echo "== reinstall over user files"
@@ -74,14 +74,16 @@ check "hyprctl reload called" 'grep -q "hyprctl reload" "$LOG"'
 check "shell reload requested" 'grep -q "qs ipc -c hyprunity call shell reload" "$LOG"'
 check "agent daemon restarted" 'grep -q "pkill -f \^python3 .*unityagentd" "$LOG"'
 
-echo "== interactive: decline update and backups"
+echo "== interactive: decline update, backups and AUR"
 : >"$LOG"
 BEFORE=$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)
-printf 'n\nn\n' | script -qec "env -i HOME='$FAKE' PATH='$STUB:/usr/bin:/bin' SMOKE_LOG='$LOG' TERM=dumb bash '$REPO/install.sh'" /dev/null >"$WORK/tty.log" 2>&1
+printf 'n\nn\nn\n' | script -qec "env -i HOME='$FAKE' PATH='$STUB:/usr/bin:/bin' SMOKE_LOG='$LOG' TERM=dumb bash '$REPO/install.sh'" /dev/null >"$WORK/tty.log" 2>&1
 echo $? >"$WORK/rc"
 check "interactive install exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
 check "declined update runs pacman -S" 'grep -q "pacman -S --needed" "$LOG" && ! grep -q "pacman -Syu" "$LOG"'
 check "declined backups create no folder" '[ "$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)" -eq "$BEFORE" ]'
+check "declined AUR skips the AUR helper" '! grep -q "yay -S" "$LOG"'
+check "official packages still installed" 'grep -q "pacman -S --needed.*hyprland" "$LOG"'
 check "config still installed without backups" '[ -f "$FAKE/.config/quickshell/hyprunity/shell.qml" ]'
 
 echo
