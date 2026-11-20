@@ -73,8 +73,7 @@ commands, install packages and diagnose crashes — always behind an approval ca
 | `ttf-jetbrains-mono-nerd`, `qt6ct`, `git`, `base-devel` | |
 
 The AUR packages are optional: without them the shell still runs, but the default
-browser (`zen-browser`) and cursor theme will be missing. A Discord client is not
-installed; add `vesktop-bin` from the AUR yourself if you want one.
+browser (`zen-browser`) and cursor theme will be missing.
 
 ## Installation
 
