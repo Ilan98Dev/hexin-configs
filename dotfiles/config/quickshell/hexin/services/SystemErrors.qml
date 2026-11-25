@@ -9,10 +9,10 @@ import qs.config
 // crashes recorded by systemd-coredump.
 //
 // When something new appears it posts a notification with a "Fix with AI"
-// button. Choosing it hands the details to UnityAgent, which opens the chat
+// button. Choosing it hands the details to HexinAgent, which opens the chat
 // with a ready-made prompt (nothing runs until the user approves it).
 //
-// Only runs while UnityAgent and Settings > UnityAgent > System errors are
+// Only runs while HexinAgent and Settings > HexinAgent > System errors are
 // both on. The first poll after startup (or after turning the switch on) only
 // records a baseline, so old failures are never replayed as new.
 Singleton {
@@ -81,10 +81,10 @@ Singleton {
     function fix(id) {
         const err = find(id);
         if (!err) {
-            Notifs.notify("System error", "That report has expired. Open UnityAgent and describe what happened.", "dialog-information");
+            Notifs.notify("System error", "That report has expired. Open HexinAgent and describe what happened.", "dialog-information");
             return;
         }
-        UnityAgent.fixSystemError(err);
+        HexinAgent.fixSystemError(err);
     }
 
     function addError(info) {

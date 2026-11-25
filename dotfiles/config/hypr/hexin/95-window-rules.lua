@@ -23,11 +23,11 @@ hl.window_rule({
 	center = true,
 })
 
--- UnityAgent is a full chat window, not a drawer: float it and size it to the
+-- HexinAgent is a full chat window, not a drawer: float it and size it to the
 -- same footprint as the settings app.
 hl.window_rule({
-	name = "hexin-unityagent",
-	match = { title = "^(UnityAgent)$" },
+	name = "hexinagent",
+	match = { title = "^(HexinAgent)$" },
 	float = true,
 	size = fit(1100, 720),
 	center = true,

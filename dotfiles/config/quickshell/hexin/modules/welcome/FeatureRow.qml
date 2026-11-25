@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import qs.config
 import qs.components
 
-// One UnityAgent feature switch in the welcome tour. Dimmed and disabled while
+// One HexinAgent feature switch in the welcome tour. Dimmed and disabled while
 // the universal switch is off.
 Card {
     id: root

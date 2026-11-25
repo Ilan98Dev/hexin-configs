@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""UnityAgent daemon.
+"""HexinAgent daemon.
 
 Bridges two FIFOs to the Quickshell window:
 
-  /tmp/unityagent_ipc.fifo        daemon -> UI   (one JSON object per line)
-  /tmp/unityagent_user_input.fifo UI -> daemon  (one JSON object per line)
+  /tmp/hexinagent_ipc.fifo        daemon -> UI   (one JSON object per line)
+  /tmp/hexinagent_user_input.fifo UI -> daemon  (one JSON object per line)
 
 Requests
   {"type": "chat", "id", "provider", "kind", "baseUrl", "apiKey", "model",
@@ -32,10 +32,10 @@ once; create_project/write_file/edit_file/run_command and mouse_click send an
 `approval` event and block until the UI answers with `approve` (or the request
 is stopped). Mouse moves and wheel scrolling run immediately, using ydotool and
 the logical monitor layout that the screenshot tool reports.
-Coding projects live under ~/Projects/UnityAgent; run_command takes an optional
+Coding projects live under ~/Projects/HexinAgent; run_command takes an optional
 `cwd` (a project name or absolute path) so builds and tests run there.
 
-Settings > UnityAgent policy arrives in each `agent` request as `enabled` and
+Settings > HexinAgent policy arrives in each `agent` request as `enabled` and
 `features`. Disabled tools are removed from the model's tool list and refused
 if the model asks anyway; package commands are refused when package management
 is off.
@@ -82,8 +82,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-IPC_IN = "/tmp/unityagent_ipc.fifo"
-IPC_OUT = "/tmp/unityagent_user_input.fifo"
+IPC_IN = "/tmp/hexinagent_ipc.fifo"
+IPC_OUT = "/tmp/hexinagent_user_input.fifo"
 
 REVIEW_COMMANDS = {"sudo", "pacman", "yay", "paru", "systemctl", "rm", "mkfs", "dd", "mount", "umount"}
 
@@ -109,13 +109,13 @@ MAX_IMAGE_BYTES = 8 * 1024 * 1024
 
 def screenshot_dir():
     base = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
-    return os.path.join(base, "hexin", "unityagent", "screenshots")
+    return os.path.join(base, "hexin", "hexinagent", "screenshots")
 
 
 # Coding projects the agent creates live here. Relative `cwd` values passed to
 # run_command resolve against this root, so `cwd: "my-app"` means
-# ~/Projects/UnityAgent/my-app.
-PROJECT_ROOT = os.path.expanduser("~/Projects/UnityAgent")
+# ~/Projects/HexinAgent/my-app.
+PROJECT_ROOT = os.path.expanduser("~/Projects/HexinAgent")
 _PROJECT_NAME_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 
 
@@ -141,7 +141,7 @@ def resolve_cwd(cwd):
     """Resolve run_command's optional working directory.
 
     Relative paths (including a bare project name) are relative to
-    ~/Projects/UnityAgent. Absolute paths are accepted so the agent can work in
+    ~/Projects/HexinAgent. Absolute paths are accepted so the agent can work in
     an existing repository too. The directory must already exist.
     """
     raw = (cwd or "").strip()
@@ -393,13 +393,13 @@ def openai_chat(req):
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "User-Agent": "hexin-unityagent/1.0",
+        "User-Agent": "hexinagent/1.0",
     }
     if key:
         headers["Authorization"] = "Bearer " + key
     # OpenRouter likes these but they are harmless elsewhere.
     headers["HTTP-Referer"] = "https://github.com/hexin"
-    headers["X-Title"] = "UnityAgent"
+    headers["X-Title"] = "HexinAgent"
 
     data = http_json(openai_url(base), headers, payload)
     choices = data.get("choices") or []
@@ -436,7 +436,7 @@ def anthropic_chat(req):
         "Content-Type": "application/json",
         "Accept": "application/json",
         "anthropic-version": "2023-06-01",
-        "User-Agent": "hexin-unityagent/1.0",
+        "User-Agent": "hexinagent/1.0",
     }
     if key:
         headers["x-api-key"] = key
@@ -613,7 +613,7 @@ TOOL_SPECS = [
     },
     {
         "name": "create_project",
-        "description": "Create a coding project directory under ~/Projects/UnityAgent/<name> and return its path. All coding projects you make must live there. Call this first, then add files with write_file and build/test with run_command using that path as `cwd`. This needs the user's approval.",
+        "description": "Create a coding project directory under ~/Projects/HexinAgent/<name> and return its path. All coding projects you make must live there. Call this first, then add files with write_file and build/test with run_command using that path as `cwd`. This needs the user's approval.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -649,12 +649,12 @@ TOOL_SPECS = [
     },
     {
         "name": "run_command",
-        "description": "Run a shell command and return its combined stdout/stderr and exit code. This needs the user's approval. Desktop actions go through `qs ipc -c hexin call ...`. Hyprland actions use the Lua dispatchers, e.g. `hyprctl dispatch 'hl.dsp.focus({workspace = 3})'`; legacy words like `workspace 3` fail on Hyprland 0.57. To install packages, prefer the official repos: `sudo pacman -S --needed <pkg>`. Only if the package is not in the repos and is available on the AUR, use `yay -S --needed <pkg>`. For coding projects, pass `cwd` (a project name like `my-app` resolves under ~/Projects/UnityAgent) and run the project's real build/test command there.",
+        "description": "Run a shell command and return its combined stdout/stderr and exit code. This needs the user's approval. Desktop actions go through `qs ipc -c hexin call ...`. Hyprland actions use the Lua dispatchers, e.g. `hyprctl dispatch 'hl.dsp.focus({workspace = 3})'`; legacy words like `workspace 3` fail on Hyprland 0.57. To install packages, prefer the official repos: `sudo pacman -S --needed <pkg>`. Only if the package is not in the repos and is available on the AUR, use `yay -S --needed <pkg>`. For coding projects, pass `cwd` (a project name like `my-app` resolves under ~/Projects/HexinAgent) and run the project's real build/test command there.",
         "parameters": {
             "type": "object",
             "properties": {
                 "command": {"type": "string", "description": "Shell command to run."},
-                "cwd": {"type": "string", "description": "Working directory. A relative value (e.g. `my-app`) is resolved under ~/Projects/UnityAgent; an absolute path is used as-is. Defaults to the daemon's directory."},
+                "cwd": {"type": "string", "description": "Working directory. A relative value (e.g. `my-app`) is resolved under ~/Projects/HexinAgent; an absolute path is used as-is. Defaults to the daemon's directory."},
                 "timeout": {"type": "integer", "description": "Seconds before giving up. Defaults to 300."},
             },
             "required": ["command"],
@@ -663,7 +663,7 @@ TOOL_SPECS = [
 ]
 
 
-# Which Settings > UnityAgent switch owns each tool. A missing feature key
+# Which Settings > HexinAgent switch owns each tool. A missing feature key
 # means "always available" (the read-only tools). The UI sends this map with
 # every agent request; the daemon removes disabled tools from the model's tool
 # list *and* refuses them if the model asks anyway.
@@ -2167,12 +2167,12 @@ def openai_agent_turn(req, messages, system, features=None):
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "User-Agent": "hexin-unityagent/1.0",
+        "User-Agent": "hexinagent/1.0",
     }
     if key:
         headers["Authorization"] = "Bearer " + key
     headers["HTTP-Referer"] = "https://github.com/hexin"
-    headers["X-Title"] = "UnityAgent"
+    headers["X-Title"] = "HexinAgent"
 
     data = http_json(openai_url(base), headers, payload)
     choices = data.get("choices") or []
@@ -2225,7 +2225,7 @@ def anthropic_agent_turn(req, messages, system, features=None):
         "Content-Type": "application/json",
         "Accept": "application/json",
         "anthropic-version": "2023-06-01",
-        "User-Agent": "hexin-unityagent/1.0",
+        "User-Agent": "hexinagent/1.0",
     }
     key = req.get("apiKey") or ""
     if key:
@@ -2369,13 +2369,13 @@ def handle_agent(req):
     kind = "anthropic" if req.get("kind") == "anthropic" else "openai"
     system = req.get("systemPrompt") or ""
     messages = list(req.get("messages") or [])
-    # Settings > UnityAgent policy. Missing keys default to on so an older UI
+    # Settings > HexinAgent policy. Missing keys default to on so an older UI
     # build keeps working.
     if req.get("enabled") is False:
         send({
             "type": "error",
             "id": request_id,
-            "message": "UnityAgent is turned off in Settings > UnityAgent.",
+            "message": "HexinAgent is turned off in Settings > HexinAgent.",
         })
         return
     features = req.get("features")
@@ -2421,7 +2421,7 @@ def handle_agent(req):
                     feature = FEATURE_TOOLS.get(name, "")
                     label = FEATURE_LABELS.get(feature, feature or name)
                     reason = (
-                        "Refused: %s is turned off in Settings > UnityAgent. "
+                        "Refused: %s is turned off in Settings > HexinAgent. "
                         "Tell the user to enable it there if they want this action."
                         % label
                     )
@@ -2444,7 +2444,7 @@ def handle_agent(req):
                             if pm:
                                 reason = (
                                     "Refused: package management is turned off in "
-                                    "Settings > UnityAgent, so `%s` may not install, "
+                                    "Settings > HexinAgent, so `%s` may not install, "
                                     "remove or upgrade packages. Read-only queries and "
                                     "other commands still work." % pm
                                 )
@@ -2619,7 +2619,7 @@ def handle_legacy(line):
             "code": cmd,
         })
     else:
-        send({"type": "note", "title": "UnityAgent", "message": "Received: " + cmd})
+        send({"type": "note", "title": "HexinAgent", "message": "Received: " + cmd})
 
 
 def dispatch(line):
@@ -2654,7 +2654,7 @@ def dispatch(line):
     elif kind == "ping":
         send({"type": "ready"})
     elif kind:
-        send({"type": "note", "title": "UnityAgent", "message": "Unknown request: " + str(kind)})
+        send({"type": "note", "title": "HexinAgent", "message": "Unknown request: " + str(kind)})
     else:
         handle_legacy(line)
 
@@ -2682,7 +2682,7 @@ def evict_other_daemons():
         if "python" not in exe:
             continue
         script = [a.decode("utf-8", "replace") for a in argv[1:3] if a]
-        if any(os.path.basename(s) == "unityagentd.py" for s in script):
+        if any(os.path.basename(s) == "hexinagentd.py" for s in script):
             try:
                 os.kill(pid, signal.SIGTERM)
             except OSError:
@@ -2717,14 +2717,14 @@ def read_pipe():
             except InterruptedError:
                 continue
             except OSError as exc:  # noqa: BLE001
-                sys.stderr.write("unityagentd: read error: %s\n" % exc)
+                sys.stderr.write("hexinagentd: read error: %s\n" % exc)
                 return
 
             if not chunk:
                 # Every writer closed. A trailing line without a newline is
                 # dropped: the protocol always terminates a request with one.
                 if buf.strip():
-                    sys.stderr.write("unityagentd: discarding a partial request\n")
+                    sys.stderr.write("hexinagentd: discarding a partial request\n")
                 return
 
             buf += chunk
@@ -2733,7 +2733,7 @@ def read_pipe():
                 try:
                     dispatch(raw.decode("utf-8", "replace"))
                 except Exception as exc:  # noqa: BLE001
-                    sys.stderr.write("unityagentd: dispatch error: %s\n" % exc)
+                    sys.stderr.write("hexinagentd: dispatch error: %s\n" % exc)
                     sys.stderr.flush()
     finally:
         try:
@@ -2746,7 +2746,7 @@ def main():
     ensure_fifos()
     evict_other_daemons()
 
-    sys.stderr.write("unityagentd: listening\n")
+    sys.stderr.write("hexinagentd: listening\n")
     sys.stderr.flush()
     send({"type": "ready"})
 
@@ -2758,7 +2758,7 @@ def main():
             continue
         except OSError as exc:  # noqa: BLE001
             # The FIFO is gone (tmp cleaner, manual rm) — put it back.
-            sys.stderr.write("unityagentd: cannot open input fifo: %s\n" % exc)
+            sys.stderr.write("hexinagentd: cannot open input fifo: %s\n" % exc)
             ensure_fifos()
 
         # The writer went away, or the open failed. Never spin: a closed or

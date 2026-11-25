@@ -37,7 +37,7 @@ import qs.modules.settings
 import qs.modules.wallpaper
 import qs.modules.lock
 import qs.modules.welcome
-import qs.modules.unityagent
+import qs.modules.hexinagent
 
 ShellRoot {
     Bar {}
@@ -45,7 +45,7 @@ ShellRoot {
         model: Quickshell.screens
         Wallpaper {}
     }
-    UnityAgentWindow {}
+    HexinAgentWindow {}
     AgentNeon {}
     NotifPopups {}
     PanelHost {}
@@ -239,54 +239,54 @@ ShellRoot {
     }
 
     IpcHandler {
-        target: "unityagent"
+        target: "hexinagent"
         function toggle(): void {
-            UnityAgent.toggle();
+            HexinAgent.toggle();
         }
         function open(): void {
-            UnityAgent.open();
+            HexinAgent.open();
         }
         function hide(): void {
-            UnityAgent.close();
+            HexinAgent.close();
         }
         function settings(): void {
-            UnityAgent.open();
-            UnityAgent.showSettings();
+            HexinAgent.open();
+            HexinAgent.showSettings();
         }
         function chat(): void {
-            UnityAgent.open();
+            HexinAgent.open();
         }
         function newChat(): void {
-            UnityAgent.open();
-            UnityAgent.newChat();
+            HexinAgent.open();
+            HexinAgent.newChat();
         }
         function ask(text: string): void {
-            UnityAgent.open();
-            UnityAgent.sendMessage(text);
+            HexinAgent.open();
+            HexinAgent.sendMessage(text);
         }
         function approve(callId: string, approved: bool): void {
-            UnityAgent.approveTool(callId, approved);
+            HexinAgent.approveTool(callId, approved);
         }
         function stop(): void {
-            UnityAgent.stop();
+            HexinAgent.stop();
         }
         function setKey(provider: string, key: string): void {
-            UnityAgent.setKey(provider, key);
+            HexinAgent.setKey(provider, key);
         }
         function setProvider(provider: string): void {
-            UnityAgent.setProvider(provider);
+            HexinAgent.setProvider(provider);
         }
         function setModel(model: string): void {
-            UnityAgent.setModel(model);
+            HexinAgent.setModel(model);
         }
         function setBaseUrl(url: string): void {
-            UnityAgent.setBaseUrl(url);
+            HexinAgent.setBaseUrl(url);
         }
         function testConnection(): void {
-            UnityAgent.testConnection();
+            HexinAgent.testConnection();
         }
         function removeCustomModel(model: string): void {
-            UnityAgent.removeCustomModel(model);
+            HexinAgent.removeCustomModel(model);
         }
     }
 
@@ -359,9 +359,9 @@ ShellRoot {
         onPressed: Actions.gameMode = !Actions.gameMode
     }
     GlobalShortcut {
-        name: "unityagent"
-        description: "Toggle UnityAgent"
-        onPressed: UnityAgent.toggle()
+        name: "hexinagent"
+        description: "Toggle HexinAgent"
+        onPressed: HexinAgent.toggle()
     }
     GlobalShortcut {
         name: "recordRegion"

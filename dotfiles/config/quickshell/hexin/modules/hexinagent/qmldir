@@ -1,5 +1,5 @@
-module qs.modules.unityagent
-UnityAgentWindow 1.0 UnityAgentWindow.qml
+module qs.modules.hexinagent
+HexinAgentWindow 1.0 HexinAgentWindow.qml
 AgentNeon 1.0 AgentNeon.qml
 NeonEdge 1.0 NeonEdge.qml
 AgentSidebar 1.0 AgentSidebar.qml

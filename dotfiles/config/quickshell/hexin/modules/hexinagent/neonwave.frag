@@ -1,6 +1,6 @@
 #version 440
 
-// Travelling neon wave for the UnityAgent edge frame.
+// Travelling neon wave for the HexinAgent edge frame.
 //
 // The QML side passes one ShaderEffect per screen edge. `vertical` and `flip`
 // orient the strip, `uSign` makes the along-axis run clockwise on every edge,

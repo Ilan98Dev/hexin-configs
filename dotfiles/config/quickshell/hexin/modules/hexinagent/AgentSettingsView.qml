@@ -4,7 +4,7 @@ import qs.config
 import qs.services
 import qs.components
 
-// UnityAgent's own settings page: every provider in the catalogue is available
+// HexinAgent's own settings page: every provider in the catalogue is available
 // as "bring your own key". Keys are written to the agent state directory, not to
 // the shell settings file.
 Flickable {
@@ -51,26 +51,26 @@ Flickable {
 
     function commitKey() {
         const value = keyInput.text.trim();
-        if (value !== UnityAgent.keyFor(UnityAgent.settings.provider))
-            UnityAgent.setKey(UnityAgent.settings.provider, value);
+        if (value !== HexinAgent.keyFor(HexinAgent.settings.provider))
+            HexinAgent.setKey(HexinAgent.settings.provider, value);
     }
 
     function selectProvider(id) {
-        if (id === UnityAgent.settings.provider)
+        if (id === HexinAgent.settings.provider)
             return;
         root.commitKey();
-        UnityAgent.setProvider(id);
-        keyInput.text = UnityAgent.keyFor(id);
+        HexinAgent.setProvider(id);
+        keyInput.text = HexinAgent.keyFor(id);
         root.showKey = false;
     }
 
     Connections {
-        target: UnityAgent
+        target: HexinAgent
         function onSettingsChanged() {
             if (!promptInput.activeFocus)
-                promptInput.text = UnityAgent.settings.systemPrompt || "";
+                promptInput.text = HexinAgent.settings.systemPrompt || "";
             if (!baseInput.activeFocus)
-                baseInput.text = UnityAgent.settings.baseUrl || "";
+                baseInput.text = HexinAgent.settings.baseUrl || "";
         }
     }
 
@@ -89,14 +89,14 @@ Flickable {
         }
 
         Txt {
-            text: "Bring your own key. Keys, model choice and chat history stay on this machine under ~/.local/state/hexin/unityagent/."
+            text: "Bring your own key. Keys, model choice and chat history stay on this machine under ~/.local/state/hexin/hexinagent/."
             color: Theme.subtext
             wrapMode: Text.Wrap
             Layout.fillWidth: true
         }
 
         Txt {
-            text: "The master on/off switch and per-feature limits live in Settings → UnityAgent."
+            text: "The master on/off switch and per-feature limits live in Settings → HexinAgent."
             color: Theme.accent
             wrapMode: Text.Wrap
             Layout.fillWidth: true
@@ -121,8 +121,8 @@ Flickable {
                     id: prov
 
                     required property var modelData
-                    readonly property bool selected: UnityAgent.settings.provider === modelData.id
-                    readonly property bool hasKey: (UnityAgent.keys[modelData.id] || "").length > 0
+                    readonly property bool selected: HexinAgent.settings.provider === modelData.id
+                    readonly property bool hasKey: (HexinAgent.keys[modelData.id] || "").length > 0
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 62
@@ -194,7 +194,7 @@ Flickable {
         }
 
         Txt {
-            text: "All models exposed by " + (UnityAgent.provider ? UnityAgent.provider.name : "this provider") + ". Pick a chip or add any model id by hand."
+            text: "All models exposed by " + (HexinAgent.provider ? HexinAgent.provider.name : "this provider") + ". Pick a chip or add any model id by hand."
             color: Theme.subtext
             font.pixelSize: Theme.fontSmall
             wrapMode: Text.Wrap
@@ -208,8 +208,8 @@ Flickable {
 
             Repeater {
                 model: {
-                    const list = UnityAgent.modelsForProvider(UnityAgent.settings.provider);
-                    const cur = UnityAgent.settings.model;
+                    const list = HexinAgent.modelsForProvider(HexinAgent.settings.provider);
+                    const cur = HexinAgent.settings.model;
                     if (cur && cur.length && list.indexOf(cur) < 0)
                         return [cur].concat(list);
                     return list;
@@ -219,8 +219,8 @@ Flickable {
                     id: chip
 
                     required property string modelData
-                    readonly property bool selected: UnityAgent.settings.model === modelData
-                    readonly property bool custom: (UnityAgent.customModels[UnityAgent.settings.provider] || []).indexOf(modelData) >= 0
+                    readonly property bool selected: HexinAgent.settings.model === modelData
+                    readonly property bool custom: (HexinAgent.customModels[HexinAgent.settings.provider] || []).indexOf(modelData) >= 0
 
                     width: Math.min(280, chipTxt.implicitWidth + 22)
                     height: 32
@@ -255,9 +255,9 @@ Flickable {
                         onClicked: mouse => {
                             if (mouse.button === Qt.RightButton) {
                                 if (chip.custom)
-                                    UnityAgent.removeCustomModel(chip.modelData);
+                                    HexinAgent.removeCustomModel(chip.modelData);
                             } else {
-                                UnityAgent.setModel(chip.modelData);
+                                HexinAgent.setModel(chip.modelData);
                             }
                         }
                     }
@@ -292,7 +292,7 @@ Flickable {
                     selectionColor: Theme.accentSoft
                     clip: true
                     onAccepted: {
-                        UnityAgent.addCustomModel(text.trim());
+                        HexinAgent.addCustomModel(text.trim());
                         text = "";
                     }
 
@@ -332,7 +332,7 @@ Flickable {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        UnityAgent.addCustomModel(customModel.text.trim());
+                        HexinAgent.addCustomModel(customModel.text.trim());
                         customModel.text = "";
                     }
                 }
@@ -371,7 +371,7 @@ Flickable {
                     }
 
                     Txt {
-                        text: UnityAgent.providerNeedsKey ? (UnityAgent.provider ? UnityAgent.provider.keyHint : "") : "not required for local models"
+                        text: HexinAgent.providerNeedsKey ? (HexinAgent.provider ? HexinAgent.provider.keyHint : "") : "not required for local models"
                         color: Theme.subtext
                         font.pixelSize: Theme.fontSmall
                     }
@@ -411,7 +411,7 @@ Flickable {
                                 leftMargin: 10
                                 rightMargin: 10
                             }
-                            text: UnityAgent.keyFor(UnityAgent.settings.provider)
+                            text: HexinAgent.keyFor(HexinAgent.settings.provider)
                             verticalAlignment: TextInput.AlignVCenter
                             echoMode: root.showKey ? TextInput.Normal : TextInput.Password
                             color: Theme.text
@@ -425,7 +425,7 @@ Flickable {
                             Text {
                                 anchors.fill: parent
                                 visible: keyInput.text.length === 0
-                                text: UnityAgent.providerNeedsKey ? "Paste your key…" : "optional"
+                                text: HexinAgent.providerNeedsKey ? "Paste your key…" : "optional"
                                 color: Theme.subtext
                                 opacity: 0.7
                                 font.family: Theme.font
@@ -462,7 +462,7 @@ Flickable {
 
                 Txt {
                     Layout.fillWidth: true
-                    text: "Saved automatically to " + UnityAgent.settingsPath + " (mode 600). Never written to the shell settings."
+                    text: "Saved automatically to " + HexinAgent.settingsPath + " (mode 600). Never written to the shell settings."
                     color: Theme.subtext
                     font.pixelSize: Theme.fontSmall - 1
                     wrapMode: Text.Wrap
@@ -494,7 +494,7 @@ Flickable {
                         font.bold: true
                     }
                     Txt {
-                        text: "Leave empty to use " + (UnityAgent.provider ? UnityAgent.provider.baseUrl : "the provider default")
+                        text: "Leave empty to use " + (HexinAgent.provider ? HexinAgent.provider.baseUrl : "the provider default")
                         color: Theme.subtext
                         font.pixelSize: Theme.fontSmall - 1
                         elide: Text.ElideRight
@@ -517,19 +517,19 @@ Flickable {
                             leftMargin: 10
                             rightMargin: 10
                         }
-                        text: UnityAgent.settings.baseUrl || ""
+                        text: HexinAgent.settings.baseUrl || ""
                         verticalAlignment: TextInput.AlignVCenter
                         color: Theme.text
                         font.family: Theme.font
                         font.pixelSize: Theme.fontSmall + 1
                         selectionColor: Theme.accentSoft
                         clip: true
-                        onEditingFinished: UnityAgent.setBaseUrl(text.trim())
+                        onEditingFinished: HexinAgent.setBaseUrl(text.trim())
 
                         Text {
                             anchors.fill: parent
                             visible: baseInput.text.length === 0
-                            text: UnityAgent.provider ? UnityAgent.provider.baseUrl : "https://…"
+                            text: HexinAgent.provider ? HexinAgent.provider.baseUrl : "https://…"
                             color: Theme.subtext
                             opacity: 0.55
                             font.family: Theme.font
@@ -573,12 +573,12 @@ Flickable {
                 }
 
                 ValueSlider {
-                    value: UnityAgent.settings.temperature
+                    value: HexinAgent.settings.temperature
                     from: 0
                     to: 2
                     step: 0.1
                     decimals: 1
-                    onMoved: v => UnityAgent.setTemperature(v)
+                    onMoved: v => HexinAgent.setTemperature(v)
                 }
             }
         }
@@ -602,13 +602,13 @@ Flickable {
                     spacing: 7
 
                     Glyph {
-                        visible: UnityAgent.testRunning
+                        visible: HexinAgent.testRunning
                         text: Icons.refresh
                         color: Theme.accent
                         font.pixelSize: Theme.fontSmall
 
                         RotationAnimator on rotation {
-                            running: Theme.anim > 0 && UnityAgent.testRunning
+                            running: Theme.anim > 0 && HexinAgent.testRunning
                             loops: Animation.Infinite
                             from: 0
                             to: 360
@@ -618,7 +618,7 @@ Flickable {
 
                     Txt {
                         id: testTxt
-                        text: UnityAgent.testRunning ? "Testing…" : "Test connection"
+                        text: HexinAgent.testRunning ? "Testing…" : "Test connection"
                         color: Theme.accent
                         font.pixelSize: Theme.fontSmall
                         font.bold: true
@@ -630,14 +630,14 @@ Flickable {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: UnityAgent.testConnection()
+                    onClicked: HexinAgent.testConnection()
                 }
             }
 
             Txt {
                 Layout.fillWidth: true
-                text: UnityAgent.testResult
-                color: UnityAgent.testResult.toLowerCase().indexOf("ok") === 0 ? Theme.green : Theme.subtext
+                text: HexinAgent.testResult
+                color: HexinAgent.testResult.toLowerCase().indexOf("ok") === 0 ? Theme.green : Theme.subtext
                 font.pixelSize: Theme.fontSmall
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
@@ -695,7 +695,7 @@ Flickable {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: UnityAgent.resetSystemPrompt()
+                            onClicked: HexinAgent.resetSystemPrompt()
                         }
                     }
                 }
@@ -714,7 +714,7 @@ Flickable {
                             fill: parent
                             margins: 10
                         }
-                        text: UnityAgent.settings.systemPrompt || ""
+                        text: HexinAgent.settings.systemPrompt || ""
                         textFormat: TextEdit.PlainText
                         wrapMode: TextEdit.Wrap
                         selectByMouse: true
@@ -741,7 +741,7 @@ Flickable {
             Timer {
                 id: promptSave
                 interval: 600
-                onTriggered: UnityAgent.setSystemPrompt(promptInput.text)
+                onTriggered: HexinAgent.setSystemPrompt(promptInput.text)
             }
         }
 
@@ -774,7 +774,7 @@ Flickable {
                         font.bold: true
                     }
                     Txt {
-                        text: UnityAgent.conversations.length + (UnityAgent.conversations.length === 1 ? " conversation stored locally" : " conversations stored locally")
+                        text: HexinAgent.conversations.length + (HexinAgent.conversations.length === 1 ? " conversation stored locally" : " conversations stored locally")
                         color: Theme.subtext
                         font.pixelSize: Theme.fontSmall - 1
                     }
@@ -801,7 +801,7 @@ Flickable {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: UnityAgent.clearHistory()
+                        onClicked: HexinAgent.clearHistory()
                     }
                 }
             }

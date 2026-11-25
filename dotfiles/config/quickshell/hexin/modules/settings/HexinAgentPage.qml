@@ -4,7 +4,7 @@ import qs.config
 import qs.services
 import qs.components
 
-// Settings > UnityAgent.
+// Settings > HexinAgent.
 //
 // The universal switch and the per-feature policy live here, in the shell
 // settings app — not inside the agent's own window. The daemon receives the
@@ -15,7 +15,7 @@ SettingsPage {
 
     readonly property var ua: Config.unityAgent
     readonly property bool agentOn: ua.enabled
-    readonly property real lastCheck: (UnityAgent.settings.lastUpdateCheck || 0)
+    readonly property real lastCheck: (HexinAgent.settings.lastUpdateCheck || 0)
 
     function lastCheckLabel() {
         if (!lastCheck)
@@ -23,7 +23,7 @@ SettingsPage {
         return "Last checked " + new Date(lastCheck).toLocaleString();
     }
 
-    title: "UnityAgent"
+    title: "HexinAgent"
     subtitle: "The built-in assistant: one master switch and the powers it is allowed to use."
 
     SectionLabel {
@@ -31,7 +31,7 @@ SettingsPage {
     }
 
     SettingRow {
-        title: "Enable UnityAgent"
+        title: "Enable HexinAgent"
         description: "Universal switch. When off, the agent will not answer, run tools or show its neon frame, and SUPER + T only reminds you that it is off. Everything below stays configured for when you turn it back on."
 
         Toggle {
@@ -42,8 +42,8 @@ SettingsPage {
 
     SettingRow {
         title: "Model & API key"
-        description: UnityAgent.modelReady
-            ? (UnityAgent.provider ? UnityAgent.provider.name : "Provider") + " · " + (UnityAgent.settings.model || "no model")
+        description: HexinAgent.modelReady
+            ? (HexinAgent.provider ? HexinAgent.provider.name : "Provider") + " · " + (HexinAgent.settings.model || "no model")
             : "Not ready — open the agent settings to pick a provider, model and key."
 
         Rectangle {
@@ -71,8 +71,8 @@ SettingsPage {
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
                     Panels.settingsOpen = false;
-                    UnityAgent.open();
-                    UnityAgent.showSettings();
+                    HexinAgent.open();
+                    HexinAgent.showSettings();
                 }
             }
         }
@@ -87,7 +87,7 @@ SettingsPage {
         Layout.bottomMargin: 2
         text: root.agentOn
             ? "Each switch removes a tool from the agent. The model is told what is off, and the daemon refuses it even if the model asks anyway."
-            : "UnityAgent is off. These switches keep their values and take effect when you turn the agent back on."
+            : "HexinAgent is off. These switches keep their values and take effect when you turn the agent back on."
         color: Theme.subtext
         font.pixelSize: Theme.fontSmall + 1
         wrapMode: Text.Wrap
@@ -97,7 +97,7 @@ SettingsPage {
     SettingRow {
         opacity: root.agentOn ? 1 : 0.55
         title: "Coding projects"
-        description: "Create projects under ~/Projects/UnityAgent and build or test them with a project working directory."
+        description: "Create projects under ~/Projects/HexinAgent and build or test them with a project working directory."
 
         Toggle {
             checked: root.ua.projects
@@ -203,15 +203,15 @@ SettingsPage {
 
     SettingRow {
         title: "Run a check now"
-        description: UnityAgent.updateCheckRunning
+        description: HexinAgent.updateCheckRunning
             ? "Checking the repositories…"
-            : (UnityAgent.updateSummary.length ? UnityAgent.updateSummary + " · " + root.lastCheckLabel() : root.lastCheckLabel())
+            : (HexinAgent.updateSummary.length ? HexinAgent.updateSummary + " · " + root.lastCheckLabel() : root.lastCheckLabel())
 
         Rectangle {
             implicitWidth: checkLbl.implicitWidth + 24
             implicitHeight: 32
             radius: Theme.radiusSmall
-            color: UnityAgent.updateCheckRunning
+            color: HexinAgent.updateCheckRunning
                 ? Theme.surfaceHi
                 : (checkMa.containsMouse ? Theme.accent : Theme.surfaceHi)
 
@@ -224,16 +224,16 @@ SettingsPage {
             Txt {
                 id: checkLbl
                 anchors.centerIn: parent
-                text: UnityAgent.updateCheckRunning ? "Checking…" : "Check now"
-                color: checkMa.containsMouse && !UnityAgent.updateCheckRunning ? Theme.onAccent : Theme.text
+                text: HexinAgent.updateCheckRunning ? "Checking…" : "Check now"
+                color: checkMa.containsMouse && !HexinAgent.updateCheckRunning ? Theme.onAccent : Theme.text
             }
             MouseArea {
                 id: checkMa
                 anchors.fill: parent
-                enabled: !UnityAgent.updateCheckRunning
+                enabled: !HexinAgent.updateCheckRunning
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: UnityAgent.runUpdateCheck()
+                onClicked: HexinAgent.runUpdateCheck()
             }
         }
     }

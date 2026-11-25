@@ -4,7 +4,7 @@
 set -uo pipefail
 
 REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-WORK="$(mktemp -d /tmp/opencode/hyprunity-smoke.XXXXXX)"
+WORK="$(mktemp -d /tmp/opencode/hexin-smoke.XXXXXX)"
 STUB="$WORK/bin"
 FAKE="$WORK/home"
 LOG="$WORK/commands.log"
@@ -35,56 +35,56 @@ run_install() {
 echo "== fresh install"
 run_install
 check "installer exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
-check "quickshell tree copied" '[ -f "$FAKE/.config/quickshell/hyprunity/shell.qml" ]'
-check "quickshell tree matches repo" 'diff -r "$REPO/dotfiles/config/quickshell/hyprunity" "$FAKE/.config/quickshell/hyprunity" >/dev/null'
+check "quickshell tree copied" '[ -f "$FAKE/.config/quickshell/hexin/shell.qml" ]'
+check "quickshell tree matches repo" 'diff -r "$REPO/dotfiles/config/quickshell/hexin" "$FAKE/.config/quickshell/hexin" >/dev/null'
 check "hyprland.lua installed" '[ -f "$FAKE/.config/hypr/hyprland.lua" ]'
-check "hypr lua tree matches repo" 'diff -r "$REPO/dotfiles/config/hypr/hyprunity" "$FAKE/.config/hypr/hyprunity" >/dev/null'
-check "settings.json installed" '[ -f "$FAKE/.config/hyprunity/settings.json" ]'
-check "shipped preset is UnityOS" 'grep -q "\"preset\": \"UnityOS\"" "$FAKE/.config/hyprunity/settings.json"'
-check "shipped welcomeSeen is false" 'grep -q "\"welcomeSeen\": false" "$FAKE/.config/hyprunity/settings.json"'
+check "hypr lua tree matches repo" 'diff -r "$REPO/dotfiles/config/hypr/hexin" "$FAKE/.config/hypr/hexin" >/dev/null'
+check "settings.json installed" '[ -f "$FAKE/.config/hexin/settings.json" ]'
+check "shipped preset is UnityOS" 'grep -q "\"preset\": \"UnityOS\"" "$FAKE/.config/hexin/settings.json"'
+check "shipped welcomeSeen is false" 'grep -q "\"welcomeSeen\": false" "$FAKE/.config/hexin/settings.json"'
 check "matugen templates installed" '[ -d "$FAKE/.config/matugen" ]'
-check "helper scripts executable" '[ -x "$FAKE/.local/bin/hyprunity-theme-sync" ] && [ -x "$FAKE/.local/bin/hyprunity-matugen-apply" ]'
-check "kitty include written" 'grep -q "include hyprunity-theme.conf" "$FAKE/.config/kitty/kitty.conf"'
+check "helper scripts executable" '[ -x "$FAKE/.local/bin/hexin-theme-sync" ] && [ -x "$FAKE/.local/bin/hexin-matugen-apply" ]'
+check "kitty include written" 'grep -q "include hexin-theme.conf" "$FAKE/.config/kitty/kitty.conf"'
 check "xdg-utils requested" 'grep -q "xdg-utils" "$LOG"'
 check "ydotool requested" 'grep -q "ydotool" "$LOG"'
 check "vesktop not installed" '! grep -q "vesktop" "$LOG"'
 check "full update used by default" 'grep -q "pacman -Syu" "$LOG"'
 check "ydotoold user service enabled" 'grep -q "systemctl --user enable --now ydotool.service" "$LOG"'
 check "zen-browser-bin requested" 'grep -q "yay -S --needed --noconfirm.*zen-browser-bin" "$LOG"'
-check "spotlight shipped" '[ -f "$FAKE/.config/quickshell/hyprunity/modules/panels/Spotlight.qml" ]'
+check "spotlight shipped" '[ -f "$FAKE/.config/quickshell/hexin/modules/panels/Spotlight.qml" ]'
 
 echo "== reinstall over user files"
-mkdir -p "$FAKE/.config/quickshell/hyprunity/modules/panels"
-echo "// user edit" >"$FAKE/.config/quickshell/hyprunity/modules/panels/Spotlight.qml"
+mkdir -p "$FAKE/.config/quickshell/hexin/modules/panels"
+echo "// user edit" >"$FAKE/.config/quickshell/hexin/modules/panels/Spotlight.qml"
 echo "old conf" >"$FAKE/.config/hypr/hyprland.conf"
-BEFORE=$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)
+BEFORE=$(ls -d "$FAKE"/.local/state/hexin/install-backup-* 2>/dev/null | wc -l)
 run_install
 check "reinstall exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
-check "a new backup folder appeared" '[ "$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)" -gt "$BEFORE" ]'
-check "edited Spotlight was backed up" 'grep -rq "// user edit" "$FAKE"/.local/state/hyprunity/install-backup-*/'
+check "a new backup folder appeared" '[ "$(ls -d "$FAKE"/.local/state/hexin/install-backup-* 2>/dev/null | wc -l)" -gt "$BEFORE" ]'
+check "edited Spotlight was backed up" 'grep -rq "// user edit" "$FAKE"/.local/state/hexin/install-backup-*/'
 check "hyprland.conf moved aside" '[ ! -f "$FAKE/.config/hypr/hyprland.conf" ]'
-check "hyprland.conf is in the backup" 'grep -rq "old conf" "$FAKE"/.local/state/hyprunity/install-backup-*/'
-check "Spotlight restored from repo" 'diff -q "$REPO/dotfiles/config/quickshell/hyprunity/modules/panels/Spotlight.qml" "$FAKE/.config/quickshell/hyprunity/modules/panels/Spotlight.qml" >/dev/null'
+check "hyprland.conf is in the backup" 'grep -rq "old conf" "$FAKE"/.local/state/hexin/install-backup-*/'
+check "Spotlight restored from repo" 'diff -q "$REPO/dotfiles/config/quickshell/hexin/modules/panels/Spotlight.qml" "$FAKE/.config/quickshell/hexin/modules/panels/Spotlight.qml" >/dev/null'
 
 echo "== inside a Hyprland session"
 : >"$LOG"
 run_install inside
 check "session install exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
 check "hyprctl reload called" 'grep -q "hyprctl reload" "$LOG"'
-check "shell reload requested" 'grep -q "qs ipc -c hyprunity call shell reload" "$LOG"'
-check "agent daemon restarted" 'grep -q "pkill -f \^python3 .*unityagentd" "$LOG"'
+check "shell reload requested" 'grep -q "qs ipc -c hexin call shell reload" "$LOG"'
+check "agent daemon restarted" 'grep -q "pkill -f \^python3 .*hexinagentd" "$LOG"'
 
 echo "== interactive: decline update, backups and AUR"
 : >"$LOG"
-BEFORE=$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)
+BEFORE=$(ls -d "$FAKE"/.local/state/hexin/install-backup-* 2>/dev/null | wc -l)
 printf 'n\nn\nn\n' | script -qec "env -i HOME='$FAKE' PATH='$STUB:/usr/bin:/bin' SMOKE_LOG='$LOG' TERM=dumb bash '$REPO/install.sh'" /dev/null >"$WORK/tty.log" 2>&1
 echo $? >"$WORK/rc"
 check "interactive install exits 0" '[ "$(cat "$WORK/rc")" = 0 ]'
 check "declined update runs pacman -S" 'grep -q "pacman -S --needed" "$LOG" && ! grep -q "pacman -Syu" "$LOG"'
-check "declined backups create no folder" '[ "$(ls -d "$FAKE"/.local/state/hyprunity/install-backup-* 2>/dev/null | wc -l)" -eq "$BEFORE" ]'
+check "declined backups create no folder" '[ "$(ls -d "$FAKE"/.local/state/hexin/install-backup-* 2>/dev/null | wc -l)" -eq "$BEFORE" ]'
 check "declined AUR skips the AUR helper" '! grep -q "yay -S" "$LOG"'
 check "official packages still installed" 'grep -q "pacman -S --needed.*hyprland" "$LOG"'
-check "config still installed without backups" '[ -f "$FAKE/.config/quickshell/hyprunity/shell.qml" ]'
+check "config still installed without backups" '[ -f "$FAKE/.config/quickshell/hexin/shell.qml" ]'
 
 echo
 echo "PASS=$PASS FAIL=$FAIL"

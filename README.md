@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/logo.png" width="112" alt="hyprunity logo">
+  <img src="assets/logo.png" width="112" alt="hexin logo">
 </p>
 
-<h1 align="center">hyprunity</h1>
+<h1 align="center">hexin</h1>
 
 <p align="center">
   A complete Quickshell desktop for <b>UnityOS / Hyprland</b> — bar, control centre,
@@ -11,13 +11,13 @@
 
 ---
 
-hyprunity replaces the usual pile of desktop tools (waybar, fuzzel, swaync, wlogout,
+hexin replaces the usual pile of desktop tools (waybar, fuzzel, swaync, wlogout,
 hyprlock, …) with a single Quickshell configuration and a small, readable Hyprland
 Lua config. It is built around the UnityOS palette: dark violet surfaces, an orange
 accent and purple highlights.
 
 Everything is live-configurable from the built-in Settings app, scriptable over IPC,
-and themed together. **UnityAgent** adds a chat window that can read files, run
+and themed together. **HexinAgent** adds a chat window that can read files, run
 commands, install packages and diagnose crashes — always behind an approval card.
 
 ## Features
@@ -40,13 +40,13 @@ commands, install packages and diagnose crashes — always behind an approval ca
   show through), with a configurable scrim.
 - **Lock screen** — a real `ext-session-lock` surface with PAM authentication.
 - **Settings app** — appearance, wallpaper, bar layout, notifications, control centre,
-  Hyprland decoration, commands, UnityAgent and general options. Changes apply live.
+  Hyprland decoration, commands, HexinAgent and general options. Changes apply live.
 - **Theme presets** — UnityOS, Catppuccin (Mocha/Latte), Tokyo Night, Gruvbox, Nord,
   Rosé Pine, Dracula, plus **Auto (Matugen)** to derive the palette from the wallpaper.
 - **System error watcher** — notices new `coredumpctl` crashes and failed systemd units,
-  with a **Fix with AI** button that opens UnityAgent with the details filled in.
-- **UnityAgent** — provider-agnostic chat (OpenAI, Google, custom OpenAI-compatible
-  endpoints), tool use with approvals, projects under `~/Projects/UnityAgent`,
+  with a **Fix with AI** button that opens HexinAgent with the details filled in.
+- **HexinAgent** — provider-agnostic chat (OpenAI, Google, custom OpenAI-compatible
+  endpoints), tool use with approvals, projects under `~/Projects/HexinAgent`,
   web fetch/search, screenshots, ydotool mouse control and package management.
 - **Extras** — keybind cheatsheet (`SUPER + K`), first-run tour, OSD, screen recording,
   night light, caffeine mode and game mode.
@@ -78,8 +78,8 @@ browser (`zen-browser`) and cursor theme will be missing.
 ## Installation
 
 ```bash
-git clone https://github.com/Ilan98Dev/Hyprunity.git
-cd Hyprunity
+git clone https://github.com/Ilan98Dev/Hexin.git
+cd Hexin
 ./install.sh
 ```
 
@@ -93,7 +93,7 @@ The installer:
    `yay` or `paru` if you said yes and one is available;
 4. copies the configs into `~/.config` and the helper scripts into `~/.local/bin`;
 5. moves anything it replaces into
-   `~/.local/state/hyprunity/install-backup-<timestamp>` (or deletes it if you
+   `~/.local/state/hexin/install-backup-<timestamp>` (or deletes it if you
    declined the backup);
 6. adds the palette include to `~/.config/kitty/kitty.conf`;
 7. enables `NetworkManager`, `bluetooth` and the user `ydotool.service` (adding
@@ -113,7 +113,7 @@ The first-run tour opens on first launch.
 Re-running the installer is safe when backups are on (the default): it moves what
 it replaces into the backup folder, so your previous configs stay there. If you
 turn backups off, replaced files are deleted instead. Note that it ships the
-default `~/.config/hyprunity/settings.json`, so a reinstall resets the shell
+default `~/.config/hexin/settings.json`, so a reinstall resets the shell
 settings to those defaults (your old file is in the backup).
 
 ### Manual installation
@@ -126,18 +126,18 @@ install -Dm755 dotfiles/bin/* ~/.local/bin/
 ```
 
 Then make sure `~/.config/hypr/hyprland.lua` is the config Hyprland loads (remove or
-rename an existing `hyprland.conf`), and start the shell with `qs -c hyprunity`.
+rename an existing `hyprland.conf`), and start the shell with `qs -c hexin`.
 
 ## Keybindings
 
 The full, always-current list is in the shell: **`SUPER + K`** opens a searchable
-cheatsheet generated from `~/.config/hypr/hyprunity/90-keybinds.lua`.
+cheatsheet generated from `~/.config/hypr/hexin/90-keybinds.lua`.
 
 | Key | Action |
 |---|---|
 | `SUPER + C` / `SUPER + Esc` | control centre |
 | `SUPER + N` | notification centre |
-| `SUPER + T` | UnityAgent |
+| `SUPER + T` | HexinAgent |
 | `SUPER + K` | keybind cheatsheet |
 | `SUPER + ,` | settings |
 | `SUPER + W` | wallpaper picker |
@@ -167,13 +167,13 @@ cheatsheet generated from `~/.config/hypr/hyprunity/90-keybinds.lua`.
 
 | What | Where |
 |---|---|
-| Shell settings (all Settings pages) | `~/.config/hyprunity/settings.json` |
-| Hyprland values the Settings app owns | `~/.config/hypr/hyprunity/settings.lua` |
-| Hyprland config (monitors, binds, rules, autostart) | `~/.config/hypr/hyprland.lua` + `~/.config/hypr/hyprunity/*.lua` |
+| Shell settings (all Settings pages) | `~/.config/hexin/settings.json` |
+| Hyprland values the Settings app owns | `~/.config/hypr/hexin/settings.lua` |
+| Hyprland config (monitors, binds, rules, autostart) | `~/.config/hypr/hyprland.lua` + `~/.config/hypr/hexin/*.lua` |
 | Idle / lock / suspend behaviour | `~/.config/hypr/hypridle.conf` |
-| UnityAgent daemon | `~/.config/hyprunity/scripts/unityagentd.py` |
+| HexinAgent daemon | `~/.config/hexin/scripts/hexinagentd.py` |
 | Matugen templates (Auto palette) | `~/.config/matugen/` |
-| Runtime state and logs | `~/.local/state/hyprunity/` |
+| Runtime state and logs | `~/.local/state/hexin/` |
 
 `settings.json` lives outside the Quickshell config directory on purpose: Quickshell
 reloads whenever a file inside its config directory changes, so keeping settings
@@ -185,16 +185,16 @@ The Hyprland Lua config is split by topic. `hyprland.lua` is a small loader; it 
 with `pcall` so a broken file names itself in the log. Settings → Hyprland only ever
 rewrites `settings.lua`.
 
-### UnityAgent
+### HexinAgent
 
-Open **Settings → UnityAgent** and choose a provider, model and API key. The key is
-stored in the agent's own state folder (`~/.local/state/hyprunity/unityagent/`), not
+Open **Settings → HexinAgent** and choose a provider, model and API key. The key is
+stored in the agent's own state folder (`~/.local/state/hexin/hexinagent/`), not
 in this repository and not in `settings.json`.
 
 The daemon starts with the session when the universal switch is on. Read-only tools
 (listing, reading, searching, web fetch, screenshots) run immediately; project
 creation, file writes, package installs, shell commands and mouse clicks show an
-approval card first. Per-feature switches in Settings → UnityAgent remove the
+approval card first. Per-feature switches in Settings → HexinAgent remove the
 matching tools.
 
 With **Mouse control** on, the agent can see the screen with `screenshot` and drive
@@ -207,7 +207,7 @@ to the `input` group and enables the user service; if you set it up by hand, run
 
 Choose **Appearance → Preset → Auto (Matugen)**. Changing the wallpaper re-runs
 `matugen`, which writes `colors.json` for the shell and `gtk.css` for GTK apps. The
-helper scripts `hyprunity-matugen-apply` and `hyprunity-theme-sync` keep kitty, GTK
+helper scripts `hexin-matugen-apply` and `hexin-theme-sync` keep kitty, GTK
 and the Hyprland border colour in step. This needs `matugen` (installed by the
 installer); without it, use one of the static presets.
 
@@ -216,24 +216,24 @@ installer); without it, use one of the static presets.
 Everything is scriptable:
 
 ```bash
-qs ipc -c hyprunity call panels toggle control
-qs ipc -c hyprunity call panels toggle notifications
-qs ipc -c hyprunity call panels toggle launcher
-qs ipc -c hyprunity call panels toggle spotlight
-qs ipc -c hyprunity call panels toggle clipboard
-qs ipc -c hyprunity call panels toggle wallpaper
-qs ipc -c hyprunity call settings toggle
-qs ipc -c hyprunity call audio up | down | mute | micMute
-qs ipc -c hyprunity call brightness up | down
-qs ipc -c hyprunity call notifications toggleDnd | clear
-qs ipc -c hyprunity call media playPause | next | previous
-qs ipc -c hyprunity call actions notify "Title" "Body"
-qs ipc -c hyprunity call actions gameMode | screenshot | caffeine | nightLight
-qs ipc -c hyprunity call unityagent ask "What is using port 8080?"
-qs ipc -c hyprunity call shell reload | lock
+qs ipc -c hexin call panels toggle control
+qs ipc -c hexin call panels toggle notifications
+qs ipc -c hexin call panels toggle launcher
+qs ipc -c hexin call panels toggle spotlight
+qs ipc -c hexin call panels toggle clipboard
+qs ipc -c hexin call panels toggle wallpaper
+qs ipc -c hexin call settings toggle
+qs ipc -c hexin call audio up | down | mute | micMute
+qs ipc -c hexin call brightness up | down
+qs ipc -c hexin call notifications toggleDnd | clear
+qs ipc -c hexin call media playPause | next | previous
+qs ipc -c hexin call actions notify "Title" "Body"
+qs ipc -c hexin call actions gameMode | screenshot | caffeine | nightLight
+qs ipc -c hexin call hexinagent ask "What is using port 8080?"
+qs ipc -c hexin call shell reload | lock
 ```
 
-`qs ipc -c hyprunity show` lists every target and function.
+`qs ipc -c hexin show` lists every target and function.
 
 ## Project structure
 
@@ -242,23 +242,23 @@ install.sh                         installer (Arch / x86_64)
 tests/install-smoke.sh             installer test (stubbed, changes nothing)
 dotfiles/
 ├── bin/
-│   ├── hyprunity-matugen-apply    wallpaper -> palette (shell + GTK + kitty + borders)
-│   └── hyprunity-theme-sync       active preset -> kitty / GTK / border colour
+│   ├── hexin-matugen-apply    wallpaper -> palette (shell + GTK + kitty + borders)
+│   └── hexin-theme-sync       active preset -> kitty / GTK / border colour
 └── config/
-    ├── quickshell/hyprunity/      the shell
+    ├── quickshell/hexin/      the shell
     │   ├── shell.qml              surfaces, IPC, global shortcuts
     │   ├── config/                Theme, Config, Icons, Models
     │   ├── services/              audio, network, media, notifications, agent, …
     │   ├── components/            shared widgets
     │   └── modules/               bar, panels, notifications, osd, lock,
-    │                              settings, wallpaper, welcome, unityagent
+    │                              settings, wallpaper, welcome, hexinagent
     ├── hypr/
     │   ├── hyprland.lua           loader
     │   ├── hypridle.conf          idle / lock / suspend
-    │   └── hyprunity/             topic files + settings.lua + keybinds dump
-    ├── hyprunity/
+    │   └── hexin/             topic files + settings.lua + keybinds dump
+    ├── hexin/
     │   ├── settings.json          default shell settings
-    │   └── scripts/               UnityAgent daemon + FIFO reader
+    │   └── scripts/               HexinAgent daemon + FIFO reader
     └── matugen/                   Auto palette templates
 ```
 
@@ -279,8 +279,8 @@ over existing files (including backups), and the in-session reload path.
 **The shell does not start.** Run it in a terminal and read the log:
 
 ```bash
-qs -c hyprunity
-cat ~/.local/state/hyprunity/shell.log
+qs -c hexin
+cat ~/.local/state/hexin/shell.log
 ```
 
 **Hyprland ignores the config.** Check that `~/.config/hypr/hyprland.lua` exists and
@@ -292,7 +292,7 @@ hyprctl reload
 ```
 
 **Two bars / two notification daemons.** Stop any other bar or notification daemon
-(`waybar`, `swaync`, `dunst`, `mako`) before starting hyprunity.
+(`waybar`, `swaync`, `dunst`, `mako`) before starting hexin.
 
 **No icons or odd glyphs.** Install a Nerd Font (`ttf-jetbrains-mono-nerd`) and pick
 it in Settings → Appearance.
@@ -300,12 +300,12 @@ it in Settings → Appearance.
 **Bluetooth / battery missing from the bar.** Make sure `bluetooth.service` is running
 and `upower` is installed; the indicators hide themselves when the service is absent.
 
-**UnityAgent says the key is missing.** Set it in Settings → UnityAgent. Keys are
+**HexinAgent says the key is missing.** Set it in Settings → HexinAgent. Keys are
 per-user and are never stored in this repo.
 
-**Reset the shell settings.** Delete `~/.config/hyprunity/settings.json` and reload;
+**Reset the shell settings.** Delete `~/.config/hexin/settings.json` and reload;
 the defaults are written on the next start. The old file is recreated with the values
-currently in memory, so restart the shell (`qs kill -c hyprunity && qs -c hyprunity`)
+currently in memory, so restart the shell (`qs kill -c hexin && qs -c hexin`)
 for a true reset.
 
 ## Credits

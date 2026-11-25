@@ -8,7 +8,7 @@ import qs.components
 Item {
     id: root
 
-    readonly property bool empty: UnityAgent.messages.length === 0
+    readonly property bool empty: HexinAgent.messages.length === 0
     readonly property var suggestions: [
         "What is using my CPU?",
         "Update my system safely",
@@ -16,7 +16,7 @@ Item {
     ]
 
     // ───────────── message model ─────────────
-    // A ListModel mirrors UnityAgent.messages so appending or updating one
+    // A ListModel mirrors HexinAgent.messages so appending or updating one
     // message touches only that row. Binding the Repeater straight to the
     // service array would regenerate every delegate on each change, which
     // replays the entry animation for the whole conversation.
@@ -33,7 +33,7 @@ Item {
     property var syncedMessages: []
 
     function syncMessages() {
-        const msgs = UnityAgent.messages || []
+        const msgs = HexinAgent.messages || []
         while (messageModel.count > msgs.length)
             messageModel.remove(messageModel.count - 1)
 
@@ -57,7 +57,7 @@ Item {
     Component.onCompleted: syncMessages()
 
     Connections {
-        target: UnityAgent
+        target: HexinAgent
         function onMessagesChanged() {
             root.syncMessages();
         }
@@ -94,7 +94,7 @@ Item {
                 spacing: 3
 
                 Txt {
-                    text: UnityAgent.activeTitle
+                    text: HexinAgent.activeTitle
                     font.pixelSize: Theme.fontLarge
                     font.bold: true
                     elide: Text.ElideRight
@@ -102,7 +102,7 @@ Item {
                 }
 
                 Txt {
-                    text: UnityAgent.provider ? (UnityAgent.provider.name + " · " + (UnityAgent.settings.model || "no model")) : "No provider"
+                    text: HexinAgent.provider ? (HexinAgent.provider.name + " · " + (HexinAgent.settings.model || "no model")) : "No provider"
                     color: Theme.subtext
                     font.pixelSize: Theme.fontSmall
                     elide: Text.ElideRight
@@ -111,15 +111,15 @@ Item {
             }
 
             Txt {
-                text: !UnityAgent.enabled ? "off" : (UnityAgent.runningCommand ? "running…" : (UnityAgent.busy ? "thinking…" : (UnityAgent.modelReady ? "ready" : "needs a key")))
-                color: UnityAgent.enabled ? Theme.subtext : Theme.red
+                text: !HexinAgent.enabled ? "off" : (HexinAgent.runningCommand ? "running…" : (HexinAgent.busy ? "thinking…" : (HexinAgent.modelReady ? "ready" : "needs a key")))
+                color: HexinAgent.enabled ? Theme.subtext : Theme.red
                 font.pixelSize: Theme.fontSmall
             }
 
             IconButton {
                 glyph: Icons.plus
                 size: 32
-                onClicked: UnityAgent.newChat()
+                onClicked: HexinAgent.newChat()
             }
         }
     }
@@ -137,7 +137,7 @@ Item {
             bottom: parent.bottom
             bottomMargin: composerDock.height + 48
         }
-        visible: !root.empty && UnityAgent.enabled
+        visible: !root.empty && HexinAgent.enabled
         clip: true
         contentWidth: width
         contentHeight: stream.implicitHeight + 28
@@ -177,9 +177,9 @@ Item {
                         index: delegateRoot.index
                         stagger: root.bulkAppend
                         showTime: true
-                        onRunRequested: code => UnityAgent.approveCommand(code)
-                        onToolDecision: (callId, approved) => UnityAgent.approveTool(callId, approved)
-                        onInputSubmitted: (callId, value, cancelled) => UnityAgent.submitInput(callId, value, cancelled)
+                        onRunRequested: code => HexinAgent.approveCommand(code)
+                        onToolDecision: (callId, approved) => HexinAgent.approveTool(callId, approved)
+                        onInputSubmitted: (callId, value, cancelled) => HexinAgent.submitInput(callId, value, cancelled)
                     }
                 }
             }
@@ -214,7 +214,7 @@ Item {
             bottomMargin: 2
         }
         height: 40
-        visible: !root.empty && UnityAgent.enabled
+        visible: !root.empty && HexinAgent.enabled
         gradient: Gradient {
             GradientStop {
                 position: 0
@@ -237,7 +237,7 @@ Item {
         }
         width: Math.min(680, parent.width - 80)
         spacing: 12
-        visible: root.empty && UnityAgent.enabled
+        visible: root.empty && HexinAgent.enabled
         opacity: 0
 
         Component.onCompleted: {
@@ -317,7 +317,7 @@ Item {
 
         Txt {
             Layout.fillWidth: true
-            text: "Ask a question, plan a change, or paste an error. UnityAgent can read files, search the web and run commands — anything that changes your system waits for your approval."
+            text: "Ask a question, plan a change, or paste an error. HexinAgent can read files, search the web and run commands — anything that changes your system waits for your approval."
             color: Theme.subtext
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
@@ -329,7 +329,7 @@ Item {
     // ───────────── off state ─────────────
     // The window still opens when the universal switch is off, so the agent is
     // findable and the reason is obvious. The composer, history and neon are
-    // hidden; Settings > UnityAgent is one click away.
+    // hidden; Settings > HexinAgent is one click away.
     Item {
         id: offState
         anchors {
@@ -338,7 +338,7 @@ Item {
             top: header.bottom
             bottom: parent.bottom
         }
-        visible: !UnityAgent.enabled
+        visible: !HexinAgent.enabled
 
         ColumnLayout {
             anchors.centerIn: parent
@@ -364,7 +364,7 @@ Item {
 
             Txt {
                 Layout.fillWidth: true
-                text: "UnityAgent is turned off"
+                text: "HexinAgent is turned off"
                 font.pixelSize: Theme.fontLarge + 8
                 font.bold: true
                 horizontalAlignment: Text.AlignHCenter
@@ -372,7 +372,7 @@ Item {
 
             Txt {
                 Layout.fillWidth: true
-                text: "Turn it back on in Settings → UnityAgent. The same page has the per-feature switches, including project creation, package management and the weekly update check."
+                text: "Turn it back on in Settings → HexinAgent. The same page has the per-feature switches, including project creation, package management and the weekly update check."
                 color: Theme.subtext
                 wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
@@ -397,7 +397,7 @@ Item {
                 Txt {
                     id: offLbl
                     anchors.centerIn: parent
-                    text: "Open Settings → UnityAgent"
+                    text: "Open Settings → HexinAgent"
                     color: offMa.containsMouse ? Theme.onAccent : Theme.text
                     font.bold: true
                 }
@@ -407,8 +407,8 @@ Item {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        UnityAgent.close();
-                        Panels.settingsPage = "unityagent";
+                        HexinAgent.close();
+                        Panels.settingsPage = "hexinagent";
                         Panels.openSettings();
                     }
                 }
@@ -423,7 +423,7 @@ Item {
         id: composerDock
         width: parent.width
         height: composer.height
-        visible: UnityAgent.enabled
+        visible: HexinAgent.enabled
         y: (root.height - composer.height) / 2 + 62
 
         states: State {
@@ -448,19 +448,19 @@ Item {
             id: composer
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(820, parent.width - 48)
-            busy: UnityAgent.busy || UnityAgent.runningCommand
-            canStop: UnityAgent.busy && !UnityAgent.runningCommand
-            hint: UnityAgent.runningCommand ? "Running the approved command…" : ""
-            modelLabel: UnityAgent.settings.model || ""
-            onSend: text => UnityAgent.sendMessage(text)
-            onStop: UnityAgent.stop()
+            busy: HexinAgent.busy || HexinAgent.runningCommand
+            canStop: HexinAgent.busy && !HexinAgent.runningCommand
+            hint: HexinAgent.runningCommand ? "Running the approved command…" : ""
+            modelLabel: HexinAgent.settings.model || ""
+            onSend: text => HexinAgent.sendMessage(text)
+            onStop: HexinAgent.stop()
         }
     }
 
     // Suggestions sit under the composer while the chat is empty, aligned to
     // the field so the whole block reads as one column.
     Flow {
-        visible: root.empty && UnityAgent.enabled
+        visible: root.empty && HexinAgent.enabled
         x: composer.x
         width: composer.width
         anchors {

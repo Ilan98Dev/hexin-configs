@@ -6,7 +6,7 @@ import qs.services
 
 // Ambient neon edge lighting, one surface per monitor.
 //
-// It fades in while the UnityAgent window is open and fades out when it
+// It fades in while the HexinAgent window is open and fades out when it
 // closes. The surface is a click-through overlay (empty input region), so it
 // never steals focus or blocks the desktop underneath.
 //
@@ -47,8 +47,8 @@ Variants {
         WlrLayershell.namespace: "qs-agent-neon"
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
-        readonly property bool thinking: UnityAgent.busy && !UnityAgent.streaming
-        readonly property bool responding: UnityAgent.streaming
+        readonly property bool thinking: HexinAgent.busy && !HexinAgent.streaming
+        readonly property bool responding: HexinAgent.streaming
         readonly property bool animOn: Theme.anim > 0
 
         // 0..4, one unit per edge, clockwise from the top-left corner.
@@ -154,12 +154,12 @@ Variants {
             duration: Math.max(180, Theme.anim + 90)
             easing.type: Easing.InOutSine
 
-            onFinished: if (!UnityAgent.visible || !UnityAgent.enabled)
+            onFinished: if (!HexinAgent.visible || !HexinAgent.enabled)
                 win.active = false
         }
 
         function sync() {
-            if (UnityAgent.visible && UnityAgent.enabled) {
+            if (HexinAgent.visible && HexinAgent.enabled) {
                 win.active = true;
                 if (Theme.anim <= 0) {
                     glow.opacity = 1;
@@ -181,7 +181,7 @@ Variants {
         }
 
         Connections {
-            target: UnityAgent
+            target: HexinAgent
             function onVisibleChanged() {
                 win.sync();
             }

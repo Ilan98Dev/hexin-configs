@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
-// Catalogue of providers + models UnityAgent can talk to.
+// Catalogue of providers + models HexinAgent can talk to.
 //
 // Every provider is "bring your own key": the key is entered in the agent's own
 // settings view and stored locally in the state directory (never in the shell

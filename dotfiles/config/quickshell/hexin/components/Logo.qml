@@ -9,7 +9,7 @@ import qs.config
 //
 // Callers size the mark and, for the glyph fallback, choose which glyph and
 // colour to use. The plate behind it (if any) stays in the caller, so the same
-// mark can sit on the bar pill, the UnityAgent sidebar or a card.
+// mark can sit on the bar pill, the HexinAgent sidebar or a card.
 Item {
     id: root
 

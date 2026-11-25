@@ -36,8 +36,8 @@ LazyLoader {
                 glyph: Icons.bell
             },
             {
-                key: "unityagent",
-                name: "UnityAgent",
+                key: "hexinagent",
+                name: "HexinAgent",
                 glyph: Icons.star
             },
             {
@@ -252,7 +252,7 @@ LazyLoader {
                     WallpaperPage {}
                     BarPage {}
                     NotificationsPage {}
-                    UnityAgentPage {}
+                    HexinAgentPage {}
                     ControlPage {}
                     HyprPage {}
                     AppsPage {}

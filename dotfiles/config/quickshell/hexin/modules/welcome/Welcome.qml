@@ -13,7 +13,7 @@ import qs.components
 // first run.
 //
 // Five pages slide horizontally inside one card: the intro, the essential
-// keybinds, personalisation (live theme + accent), the UnityAgent master
+// keybinds, personalisation (live theme + accent), the HexinAgent master
 // switch, and a closing page. Arrow keys, the dots and the footer buttons all
 // drive the same `page` value.
 LazyLoader {
@@ -500,7 +500,7 @@ LazyLoader {
                                         },
                                         {
                                             keys: ["SUPER", "T"],
-                                            label: "UnityAgent",
+                                            label: "HexinAgent",
                                             hint: "Your approval-first assistant"
                                         },
                                         {
@@ -727,7 +727,7 @@ LazyLoader {
                         }
                     }
 
-                    // 4 ─ UnityAgent ─────────────────────────────────
+                    // 4 ─ HexinAgent ─────────────────────────────────
                     Item {
                         id: pageAgent
 
@@ -762,7 +762,7 @@ LazyLoader {
 
                                 Txt {
                                     Layout.fillWidth: true
-                                    text: "Meet UnityAgent"
+                                    text: "Meet HexinAgent"
                                     font.pixelSize: Theme.fontLarge + 10
                                     font.bold: true
                                 }
@@ -775,7 +775,7 @@ LazyLoader {
                             }
 
                             // The universal switch comes first, exactly like
-                            // Settings ▸ UnityAgent.
+                            // Settings ▸ HexinAgent.
                             Card {
                                 Layout.fillWidth: true
                                 padding: 14
@@ -810,7 +810,7 @@ LazyLoader {
 
                                         Txt {
                                             Layout.fillWidth: true
-                                            text: "UnityAgent"
+                                            text: "HexinAgent"
                                             font.bold: true
                                             font.pixelSize: Theme.fontSize + 2
                                         }
@@ -956,14 +956,14 @@ LazyLoader {
 
                                 Txt {
                                     Layout.fillWidth: true
-                                    text: "Add a provider and API key in Settings ▸ UnityAgent. Everything here can be changed later."
+                                    text: "Add a provider and API key in Settings ▸ HexinAgent. Everything here can be changed later."
                                     color: Theme.subtext
                                     font.pixelSize: Theme.fontSmall
                                     wrapMode: Text.Wrap
                                 }
                                 WelcomeButton {
-                                    text: "Configure UnityAgent"
-                                    onClicked: surface.openSettings("unityagent")
+                                    text: "Configure HexinAgent"
+                                    onClicked: surface.openSettings("hexinagent")
                                 }
                             }
                         }
@@ -1124,7 +1124,7 @@ LazyLoader {
                                     }
                                     Txt {
                                         Layout.fillWidth: true
-                                        text: "Ask UnityAgent for a hand"
+                                        text: "Ask HexinAgent for a hand"
                                         color: Theme.subtext
                                     }
                                 }

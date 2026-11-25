@@ -93,7 +93,7 @@ Item {
         case "run_command":
             return (a.cwd ? "In: " + a.cwd + "\n" : "") + (a.command || "");
         case "create_project":
-            return "~/Projects/UnityAgent/" + (a.name || "");
+            return "~/Projects/HexinAgent/" + (a.name || "");
         case "read_file":
             return a.path || "";
         case "list_dir":
@@ -281,7 +281,7 @@ Item {
                 }
 
                 Txt {
-                    text: root.isUser ? "You" : (root.isTool ? root.toolLabel : "UnityAgent")
+                    text: root.isUser ? "You" : (root.isTool ? root.toolLabel : "HexinAgent")
                     color: root.isUser ? Theme.subtext : (root.isError ? Theme.red : Theme.accent)
                     font.pixelSize: Theme.fontSmall
                     font.bold: true

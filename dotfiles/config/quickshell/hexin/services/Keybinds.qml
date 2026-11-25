@@ -116,7 +116,7 @@ Singleton {
                 clipboard: "Clipboard history",
                 settings: "Settings",
                 wallpaper: "Wallpaper switcher",
-                unityagent: "UnityAgent",
+                hexinagent: "HexinAgent",
                 dnd: "Do Not Disturb",
                 gamemode: "Game mode",
                 lock: "Lock screen",

@@ -15,4 +15,4 @@ singleton Recorder 1.0 Recorder.qml
 singleton SysStats 1.0 SysStats.qml
 singleton SystemErrors 1.0 SystemErrors.qml
 singleton Time 1.0 Time.qml
-singleton UnityAgent 1.0 UnityAgent.qml
+singleton HexinAgent 1.0 HexinAgent.qml

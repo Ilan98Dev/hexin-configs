@@ -5,38 +5,38 @@ import qs.config
 import qs.services
 import qs.components
 
-// The UnityAgent window. A real floating window (not a layer-shell drawer)
+// The HexinAgent window. A real floating window (not a layer-shell drawer)
 // with a staggered reveal: the frame blooms, the sidebar rows cascade, the
 // chat column slides in, and the composer glides from the middle to the bottom
 // when the first message is sent.
 LazyLoader {
     id: loader
 
-    active: UnityAgent.visible
+    active: HexinAgent.visible
 
     FloatingWindow {
         id: win
 
-        title: "UnityAgent"
+        title: "HexinAgent"
         color: "transparent"
         implicitWidth: 1100
         implicitHeight: 720
         visible: true
 
         onVisibleChanged: if (!visible)
-            UnityAgent.close()
+            HexinAgent.close()
 
         Component.onCompleted: {
-            if (UnityAgent.view === "chat")
+            if (HexinAgent.view === "chat")
                 Qt.callLater(chat.focusComposer);
         }
 
         // Keep keyboard focus on the visible page: otherwise the hidden
         // composer keeps the focus and PageUp/PageDown do nothing in settings.
         Connections {
-            target: UnityAgent
+            target: HexinAgent
             function onViewChanged() {
-                if (UnityAgent.view === "settings")
+                if (HexinAgent.view === "settings")
                     Qt.callLater(settingsView.forceActiveFocus)
                 else
                     Qt.callLater(chat.focusComposer)
@@ -265,9 +265,9 @@ LazyLoader {
                         id: chat
                         anchors.fill: parent
                         visible: opacity > 0
-                        opacity: UnityAgent.view === "chat" ? 1 : 0
+                        opacity: HexinAgent.view === "chat" ? 1 : 0
                         transform: Translate {
-                            x: UnityAgent.view === "chat" ? 0 : -22
+                            x: HexinAgent.view === "chat" ? 0 : -22
                             Behavior on x {
                                 NumberAnimation {
                                     duration: Math.max(1, Theme.anim + 40)
@@ -288,9 +288,9 @@ LazyLoader {
                         id: settingsView
                         anchors.fill: parent
                         visible: opacity > 0
-                        opacity: UnityAgent.view === "settings" ? 1 : 0
+                        opacity: HexinAgent.view === "settings" ? 1 : 0
                         transform: Translate {
-                            x: UnityAgent.view === "settings" ? 0 : 22
+                            x: HexinAgent.view === "settings" ? 0 : 22
                             Behavior on x {
                                 NumberAnimation {
                                     duration: Math.max(1, Theme.anim + 40)
@@ -312,9 +312,9 @@ LazyLoader {
 
         // When the view flips, slide/fade and return focus to the composer.
         Connections {
-            target: UnityAgent
+            target: HexinAgent
             function onViewChanged() {
-                if (UnityAgent.view === "chat")
+                if (HexinAgent.view === "chat")
                     Qt.callLater(chat.focusComposer);
                 else
                     settingsView.forceActiveFocus();

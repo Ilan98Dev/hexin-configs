@@ -12,7 +12,7 @@ Rectangle {
 
     readonly property var filtered: {
         const q = root.filter.toLowerCase().trim()
-        return UnityAgent.conversations.filter(c => {
+        return HexinAgent.conversations.filter(c => {
             if (!q)
                 return true
             return (c.title || "").toLowerCase().indexOf(q) >= 0
@@ -148,7 +148,7 @@ Rectangle {
                 spacing: 2
 
                 Txt {
-                    text: "UnityAgent"
+                    text: "HexinAgent"
                     font.bold: true
                     font.pixelSize: Theme.fontSize + 2
                 }
@@ -163,7 +163,7 @@ Rectangle {
                 glyph: Icons.close
                 size: 26
                 glyphSize: Theme.fontSmall
-                onClicked: UnityAgent.close()
+                onClicked: HexinAgent.close()
             }
         }
 
@@ -197,7 +197,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: UnityAgent.newChat()
+                onClicked: HexinAgent.newChat()
             }
         }
 
@@ -285,7 +285,7 @@ Rectangle {
                 required property string subtitle
                 required property int index
 
-                readonly property bool active: UnityAgent.activeId === chatId
+                readonly property bool active: HexinAgent.activeId === chatId
                 readonly property bool hot: rowMa.containsMouse
 
                 width: historyList.width
@@ -391,7 +391,7 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: UnityAgent.deleteChat(row.chatId)
+                        onClicked: HexinAgent.deleteChat(row.chatId)
                     }
                 }
 
@@ -400,7 +400,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: UnityAgent.selectChat(row.chatId)
+                    onClicked: HexinAgent.selectChat(row.chatId)
                 }
             }
         }
@@ -428,7 +428,7 @@ Rectangle {
             Layout.fillWidth: true
             height: 48
             radius: Theme.radiusSmall
-            color: UnityAgent.view === "settings" ? Theme.accentSoft : (settingsMa.containsMouse ? Theme.hover : "transparent")
+            color: HexinAgent.view === "settings" ? Theme.accentSoft : (settingsMa.containsMouse ? Theme.hover : "transparent")
 
             RowLayout {
                 anchors {
@@ -440,7 +440,7 @@ Rectangle {
 
                 Glyph {
                     text: Icons.cog
-                    color: UnityAgent.view === "settings" ? Theme.accent : Theme.subtext
+                    color: HexinAgent.view === "settings" ? Theme.accent : Theme.subtext
                     font.pixelSize: Theme.fontSmall + 2
                 }
 
@@ -450,11 +450,11 @@ Rectangle {
 
                     Txt {
                         text: "Settings"
-                        font.bold: UnityAgent.view === "settings"
-                        color: UnityAgent.view === "settings" ? Theme.accent : Theme.text
+                        font.bold: HexinAgent.view === "settings"
+                        color: HexinAgent.view === "settings" ? Theme.accent : Theme.text
                     }
                     Txt {
-                        text: UnityAgent.provider ? UnityAgent.provider.name : "No provider"
+                        text: HexinAgent.provider ? HexinAgent.provider.name : "No provider"
                         color: Theme.subtext
                         font.pixelSize: Theme.fontSmall - 1
                     }
@@ -466,7 +466,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: UnityAgent.view === "settings" ? UnityAgent.showChat() : UnityAgent.showSettings()
+                onClicked: HexinAgent.view === "settings" ? HexinAgent.showChat() : HexinAgent.showSettings()
             }
         }
     }

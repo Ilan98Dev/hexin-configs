@@ -105,9 +105,9 @@ Rectangle {
         },
         {
             id: "agent",
-            label: "Open UnityAgent",
+            label: "Open HexinAgent",
             hint: "Approval-first assistant",
-            keys: "agent ai chat unityagent assistant",
+            keys: "agent ai chat hexinagent assistant",
             glyph: Icons.star
         },
         {
@@ -438,7 +438,7 @@ Rectangle {
         else if (id === "clipboard")
             Panels.toggle("clipboard");
         else if (id === "agent")
-            UnityAgent.toggle();
+            HexinAgent.toggle();
         else if (id === "screenshot")
             Actions.screenshot();
         else if (id === "record")

@@ -216,7 +216,7 @@ Singleton {
                 property bool welcomeSeen: false
             }
 
-            // Settings > UnityAgent. These are policy switches, not provider
+            // Settings > HexinAgent. These are policy switches, not provider
             // credentials: the API key and model live in the agent's own state
             // file. The daemon receives them with every request and removes or
             // refuses the matching tools.

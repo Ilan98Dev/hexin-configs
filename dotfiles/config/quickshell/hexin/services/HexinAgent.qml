@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.config
 
-// UnityAgent state.
+// HexinAgent state.
 //
 //   visible        the chat window is open
 //   view           "chat" | "settings"
@@ -13,10 +13,10 @@ import qs.config
 //   settings/keys  BYOK model configuration
 //
 // The daemon talks JSON over two FIFOs:
-//   ~ -> daemon : /tmp/unityagent_user_input.fifo
-//   daemon -> ~ : /tmp/unityagent_ipc.fifo
+//   ~ -> daemon : /tmp/hexinagent_user_input.fifo
+//   daemon -> ~ : /tmp/hexinagent_ipc.fifo
 //
-// Keys live in ~/.local/state/hexin/unityagent/settings.json (chmod 600),
+// Keys live in ~/.local/state/hexin/hexinagent/settings.json (chmod 600),
 // never in ~/.config/hexin/settings.json.
 Singleton {
     id: root
@@ -24,22 +24,22 @@ Singleton {
     readonly property string stateDir: {
         const base = Quickshell.env("XDG_STATE_HOME")
         const home = Quickshell.env("HOME") || ""
-        return (base && base.length ? base : home + "/.local/state") + "/hexin/unityagent"
+        return (base && base.length ? base : home + "/.local/state") + "/hexin/hexinagent"
     }
     readonly property string settingsPath: stateDir + "/settings.json"
     readonly property string historyPath: stateDir + "/history.json"
-    readonly property string inputFifo: "/tmp/unityagent_user_input.fifo"
-    readonly property string ipcFifo: "/tmp/unityagent_ipc.fifo"
+    readonly property string inputFifo: "/tmp/hexinagent_user_input.fifo"
+    readonly property string ipcFifo: "/tmp/hexinagent_ipc.fifo"
 
-    readonly property string defaultSystemPrompt: "You are UnityAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, capture the screen, move the pointer, click and scroll with ydotool, create projects, write and edit files, and run shell commands through tools. Read-only tools run immediately; create_project, write_file, edit_file, run_command and mouse_click are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Before clicking, take a screenshot, use the monitor layout in the result to convert what you see into logical x/y coordinates, and say what you are about to click; prefer passing x/y to mouse_click over a separate mouse_move. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Hyprland actions use the Lua dispatchers (`hl.dsp.*`), never legacy `hyprctl dispatch workspace 3` syntax. To install packages, check the official repos first and use `sudo pacman -S --needed <pkg>`; only use `yay -S --needed <pkg>` when the package is not in the repos and is available on the AUR. All coding projects you create must live under `~/Projects/UnityAgent/<name>`: call create_project with a short name, add files with write_file, then build and test with run_command and `cwd` set to that project folder. Use short paragraphs and markdown, with commands in fenced code blocks."
+    readonly property string defaultSystemPrompt: "You are HexinAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, capture the screen, move the pointer, click and scroll with ydotool, create projects, write and edit files, and run shell commands through tools. Read-only tools run immediately; create_project, write_file, edit_file, run_command and mouse_click are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Before clicking, take a screenshot, use the monitor layout in the result to convert what you see into logical x/y coordinates, and say what you are about to click; prefer passing x/y to mouse_click over a separate mouse_move. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Hyprland actions use the Lua dispatchers (`hl.dsp.*`), never legacy `hyprctl dispatch workspace 3` syntax. To install packages, check the official repos first and use `sudo pacman -S --needed <pkg>`; only use `yay -S --needed <pkg>` when the package is not in the repos and is available on the AUR. All coding projects you create must live under `~/Projects/HexinAgent/<name>`: call create_project with a short name, add files with write_file, then build and test with run_command and `cwd` set to that project folder. Use short paragraphs and markdown, with commands in fenced code blocks."
     // Older builds stored these exact prompts; migrate them so existing installs
     // get the tool behaviour without overwriting a custom prompt.
     readonly property var legacySystemPrompts: [
-        "You are UnityAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, capture the screen, create projects, write and edit files, and run shell commands through tools. Read-only tools run immediately; create_project, write_file, edit_file and run_command are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Hyprland actions use the Lua dispatchers (`hl.dsp.*`), never legacy `hyprctl dispatch workspace 3` syntax. To install packages, check the official repos first and use `sudo pacman -S --needed <pkg>`; only use `yay -S --needed <pkg>` when the package is not in the repos and is available on the AUR. All coding projects you create must live under `~/Projects/UnityAgent/<name>`: call create_project with a short name, add files with write_file, then build and test with run_command and `cwd` set to that project folder. Use short paragraphs and markdown, with commands in fenced code blocks.",
-        "You are UnityAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, capture the screen, write and edit files, and run shell commands through tools. Read-only tools run immediately; write_file, edit_file and run_command are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Hyprland actions use the Lua dispatchers (`hl.dsp.*`), never legacy `hyprctl dispatch workspace 3` syntax. To install packages, check the official repos first and use `sudo pacman -S --needed <pkg>`; only use `yay -S --needed <pkg>` when the package is not in the repos and is available on the AUR. Use short paragraphs and markdown, with commands in fenced code blocks.",
-        "You are UnityAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, write and edit files, and run shell commands through tools. Read-only tools run immediately; write_file, edit_file and run_command are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Use short paragraphs and markdown, with commands in fenced code blocks.",
-        "You are UnityAgent, the assistant built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. Use short paragraphs and fenced code blocks for commands. When the user asks you to perform a system action, put the exact command in a single ```bash block; the interface turns it into an approval card and nothing runs until the user presses Approve & Run. After a command runs you receive a [tool result] message with its exit code and output: explain in plain, friendly language what it means and whether it worked, and if more action is needed propose exactly one command in a ```bash block. Never claim a command ran unless a tool result says so.",
-        "You are UnityAgent, the assistant built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. Use short paragraphs and fenced code blocks for commands. When the user asks you to perform a system action, put the exact command in a single ```bash block; the interface turns it into an approval card and nothing runs until the user presses Approve & Run. Never claim a command ran unless it did."
+        "You are HexinAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, capture the screen, create projects, write and edit files, and run shell commands through tools. Read-only tools run immediately; create_project, write_file, edit_file and run_command are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Hyprland actions use the Lua dispatchers (`hl.dsp.*`), never legacy `hyprctl dispatch workspace 3` syntax. To install packages, check the official repos first and use `sudo pacman -S --needed <pkg>`; only use `yay -S --needed <pkg>` when the package is not in the repos and is available on the AUR. All coding projects you create must live under `~/Projects/HexinAgent/<name>`: call create_project with a short name, add files with write_file, then build and test with run_command and `cwd` set to that project folder. Use short paragraphs and markdown, with commands in fenced code blocks.",
+        "You are HexinAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, capture the screen, write and edit files, and run shell commands through tools. Read-only tools run immediately; write_file, edit_file and run_command are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Hyprland actions use the Lua dispatchers (`hl.dsp.*`), never legacy `hyprctl dispatch workspace 3` syntax. To install packages, check the official repos first and use `sudo pacman -S --needed <pkg>`; only use `yay -S --needed <pkg>` when the package is not in the repos and is available on the AUR. Use short paragraphs and markdown, with commands in fenced code blocks.",
+        "You are HexinAgent, the agent built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. You can read and search files, list folders, fetch web pages, search the web, write and edit files, and run shell commands through tools. Read-only tools run immediately; write_file, edit_file and run_command are shown to the user as an approval card, so call them when the task needs them and never claim something happened until a tool result says so. Read the real config or file before answering instead of guessing. If a tool is denied, do not retry it. Use short paragraphs and markdown, with commands in fenced code blocks.",
+        "You are HexinAgent, the assistant built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. Use short paragraphs and fenced code blocks for commands. When the user asks you to perform a system action, put the exact command in a single ```bash block; the interface turns it into an approval card and nothing runs until the user presses Approve & Run. After a command runs you receive a [tool result] message with its exit code and output: explain in plain, friendly language what it means and whether it worked, and if more action is needed propose exactly one command in a ```bash block. Never claim a command ran unless a tool result says so.",
+        "You are HexinAgent, the assistant built into the hexin desktop shell (Arch Linux + Hyprland). Be concise, accurate and practical. Use short paragraphs and fenced code blocks for commands. When the user asks you to perform a system action, put the exact command in a single ```bash block; the interface turns it into an approval card and nothing runs until the user presses Approve & Run. Never claim a command ran unless it did."
     ]
 
     // A bundled description of this machine (the Lua Hyprland config, keybinds,
@@ -49,7 +49,7 @@ Singleton {
     property string agentContext: ""
 
     // ───────────── policy ─────────────
-    // Settings > UnityAgent owns these switches. The daemon gets the same
+    // Settings > HexinAgent owns these switches. The daemon gets the same
     // feature map with every request, so turning a feature off here also
     // removes or refuses its tools instead of only hiding UI.
     readonly property bool enabled: Config.unityAgent.enabled
@@ -73,7 +73,7 @@ Singleton {
         })
     readonly property string featureContext: {
         if (!enabled)
-            return "The user turned UnityAgent off in Settings > UnityAgent. Do not answer or run tools.";
+            return "The user turned HexinAgent off in Settings > HexinAgent. Do not answer or run tools.";
         const off = [];
         if (!Config.unityAgent.projects)
             off.push("creating coding projects");
@@ -91,7 +91,7 @@ Singleton {
             off.push("moving, clicking or scrolling the mouse");
         if (!off.length)
             return "";
-        return "The user turned these features off in Settings > UnityAgent: " + off.join(", ") + ". Do not attempt them. If asked, explain that the feature is disabled and where to turn it back on.";
+        return "The user turned these features off in Settings > HexinAgent: " + off.join(", ") + ". Do not attempt them. If asked, explain that the feature is disabled and where to turn it back on.";
     }
     readonly property string effectiveSystemPrompt: {
         const parts = [
@@ -178,7 +178,7 @@ Singleton {
 
     // ───────────── public actions ─────────────
 
-    // The universal switch lives in Settings > UnityAgent. When it is off the
+    // The universal switch lives in Settings > HexinAgent. When it is off the
     // shortcut must not open the window at all: say why instead, so the key
     // does not look broken.
     function notifyOff() {
@@ -186,7 +186,7 @@ Singleton {
             "notify-send", "-a", "hexin", "-i", "dialog-information",
             "-u", "normal", "-t", "4000",
             "-h", "string:x-hexin-notice:1",
-            "UnityAgent", "UnityAgent is off. Turn it on in Settings → UnityAgent."
+            "HexinAgent", "HexinAgent is off. Turn it on in Settings → HexinAgent."
         ]);
     }
 
@@ -219,7 +219,7 @@ Singleton {
         open()
         if (busy || runningCommand) {
             pendingFix = prompt
-            Notifs.notify("UnityAgent is busy", "The error report is queued and will be sent when the current request finishes.", "dialog-information")
+            Notifs.notify("HexinAgent is busy", "The error report is queued and will be sent when the current request finishes.", "dialog-information")
             return
         }
         sendMessage(prompt)
@@ -419,7 +419,7 @@ Singleton {
         Quickshell.execDetached([
             "notify-send", "-a", "hexin", "-i", "system-software-update",
             "-u", "normal", "-t", "6000",
-            "UnityAgent", updateSummary + " — ask me to install them."
+            "HexinAgent", updateSummary + " — ask me to install them."
         ])
 
         // Leave a note in the open chat so the result is still there after the
@@ -1317,16 +1317,16 @@ Singleton {
         running: false
         command: ["sh", "-c",
             "mkdir -p \"$HOME/.local/state/hexin\"; "
-            + "pgrep -f '^python3 .*unityagentd[.]py' >/dev/null 2>&1 || "
-            + "(setsid python3 \"$HOME/.config/hexin/scripts/unityagentd.py\" "
-            + ">>\"$HOME/.local/state/hexin/unityagentd.log\" 2>&1 &)"]
+            + "pgrep -f '^python3 .*hexinagentd[.]py' >/dev/null 2>&1 || "
+            + "(setsid python3 \"$HOME/.config/hexin/scripts/hexinagentd.py\" "
+            + ">>\"$HOME/.local/state/hexin/hexinagentd.log\" 2>&1 &)"]
     }
 
     // FIFO reader: holds the fifo open O_RDWR so the daemon's non-blocking
     // writes never fail, evicts stale readers and dies with the shell.
     Process {
         id: ipcReader
-        command: ["python3", "-u", (Quickshell.env("HOME") || "") + "/.config/hexin/scripts/unityagent-listen.py", root.ipcFifo]
+        command: ["python3", "-u", (Quickshell.env("HOME") || "") + "/.config/hexin/scripts/hexinagent-listen.py", root.ipcFifo]
         running: true
         onExited: restartTimer.restart()
         onRunningChanged: if (running)
@@ -1399,13 +1399,13 @@ Singleton {
                             inputSecret: false,
                             error: true,
                             title: "No response",
-                            output: "The tool did not report back. Check the daemon (scripts/unityagentd.py)."
+                            output: "The tool did not report back. Check the daemon (scripts/hexinagentd.py)."
                         })
                     } else {
                         root.updateMessage(i, j, {
                             pending: false,
                             error: true,
-                            content: "No response from the agent daemon. Is scripts/unityagentd.py running?"
+                            content: "No response from the agent daemon. Is scripts/hexinagentd.py running?"
                         })
                     }
                 }
@@ -1505,7 +1505,7 @@ Singleton {
         onLoaded: root.loadHistory(text())
         onLoadFailed: root.loadHistory("")
         onSaved: Quickshell.execDetached(["chmod", "600", root.historyPath])
-        onSaveFailed: error => console.warn("[UnityAgent] history save failed:", error)
+        onSaveFailed: error => console.warn("[HexinAgent] history save failed:", error)
     }
 
     FileView {
@@ -1516,7 +1516,7 @@ Singleton {
         onLoaded: root.loadSettings(text())
         onLoadFailed: root.loadSettings("")
         onSaved: Quickshell.execDetached(["chmod", "600", root.settingsPath])
-        onSaveFailed: error => console.warn("[UnityAgent] settings save failed:", error)
+        onSaveFailed: error => console.warn("[HexinAgent] settings save failed:", error)
     }
 
     // The machine description shipped with the shell. Watch it so edits take
@@ -1531,7 +1531,7 @@ Singleton {
         onLoaded: root.agentContext = text()
         onLoadFailed: error => {
             root.agentContext = "";
-            console.warn("[UnityAgent] could not load the machine context:", error);
+            console.warn("[HexinAgent] could not load the machine context:", error);
         }
     }
 

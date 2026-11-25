@@ -10,4 +10,4 @@ __pycache__/
 .DS_Store
 
 # Local runtime state (never committed)
-dotfiles/config/hyprunity/scripts/__pycache__/
+dotfiles/config/hexin/scripts/__pycache__/

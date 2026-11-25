@@ -53,7 +53,7 @@ SettingsPage {
 
     SettingRow {
         title: "Welcome tour"
-        description: "Show the five-page first-run tour again: keybinds, personalisation and the UnityAgent setup."
+        description: "Show the five-page first-run tour again: keybinds, personalisation and the HexinAgent setup."
 
         Rectangle {
             implicitWidth: welcomeLbl.implicitWidth + 24

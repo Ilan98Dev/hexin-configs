@@ -7,7 +7,7 @@ import qs.config
 // First-run welcome tour.
 //
 // `open` drives the five-page window in modules/welcome: intro, keybinds,
-// personalisation, UnityAgent setup and a closing page. The tour is shown once,
+// personalisation, HexinAgent setup and a closing page. The tour is shown once,
 // a short moment after the shell starts, when Config.general.welcomeSeen is
 // still false. Dismissing it persists that flag; Settings > General can
 // show it again at any time (that does not clear the flag until the user

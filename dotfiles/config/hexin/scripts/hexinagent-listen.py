@@ -17,9 +17,9 @@ import select
 import signal
 import sys
 
-FIFO = sys.argv[1] if len(sys.argv) > 1 else "/tmp/unityagent_ipc.fifo"
+FIFO = sys.argv[1] if len(sys.argv) > 1 else "/tmp/hexinagent_ipc.fifo"
 SELF_EXE = os.path.basename(__file__)
-DAEMON = "unityagentd"
+DAEMON = "hexinagentd"
 
 
 def die_with_parent():
@@ -60,7 +60,7 @@ def evict_other_readers():
                 continue
             try:
                 os.kill(pid, signal.SIGTERM)
-                sys.stderr.write("unityagent-listen: evicted stale reader pid %d\n" % pid)
+                sys.stderr.write("hexinagent-listen: evicted stale reader pid %d\n" % pid)
             except OSError:
                 pass
             break

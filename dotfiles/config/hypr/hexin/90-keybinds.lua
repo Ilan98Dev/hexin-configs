@@ -19,7 +19,7 @@ hl.bind(mainMod .. " + comma", hl.dsp.global("quickshell:settings")) -- [shell] 
 hl.bind(mainMod .. " + L", hl.dsp.global("quickshell:lock")) -- [shell] built-in lock (PAM)
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.global("quickshell:dnd")) -- [shell] do-not-disturb
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("qs ipc -c hexin call shell reload")) -- [shell] reload the shell
-hl.bind(mainMod .. " + T", hl.dsp.global("quickshell:unityagent")) -- [shell] unityagent
+hl.bind(mainMod .. " + T", hl.dsp.global("quickshell:hexinagent")) -- [shell] hexinagent
 hl.bind(mainMod .. " + K", hl.dsp.global("quickshell:keybinds")) -- [shell] searchable keybind cheatsheet
 
 -- ── applications ───────────────────────────────────────────────────

@@ -87,7 +87,7 @@ Rectangle {
             Text {
                 anchors.fill: parent
                 visible: editor.text.length === 0
-                text: "Ask UnityAgent anything…"
+                text: "Ask HexinAgent anything…"
                 color: Theme.subtext
                 font.family: Theme.font
                 font.pixelSize: Theme.fontSize + 1

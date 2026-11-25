@@ -47,11 +47,11 @@ hl.on("hyprland.start", function()
 	-- Its listeners live in ~/.config/hypr/hypridle.conf.
 	hl.exec_cmd("hypridle")
 
-	-- The UnityAgent daemon. It only comes up when the universal switch in
-	-- Settings → UnityAgent is on. The shell starts it later if the switch is
+	-- The HexinAgent daemon. It only comes up when the universal switch in
+	-- Settings → HexinAgent is on. The shell starts it later if the switch is
 	-- turned back on, so this is only the login path. If the settings file
 	-- cannot be read, fall back to Config's default (on).
-	local function unity_agent_enabled()
+	local function hexinagent_enabled()
 		if not io or not io.open then
 			return true
 		end
@@ -69,8 +69,8 @@ hl.on("hyprland.start", function()
 		return agent:match('"enabled"%s*:%s*(%a+)') ~= "false"
 	end
 
-	if unity_agent_enabled() then
-		hl.exec_cmd("python3 " .. os.getenv("HOME") .. "/.config/hexin/scripts/unityagentd.py & disown")
+	if hexinagent_enabled() then
+		hl.exec_cmd("python3 " .. os.getenv("HOME") .. "/.config/hexin/scripts/hexinagentd.py & disown")
 	end
 
 	-- Its output is kept: Hyprland sends exec_cmd output to /dev/null, so a QML
