@@ -7,7 +7,7 @@ source_color_index = 0
 input_path = '~/.config/matugen/templates/colors.json'
 output_path = '~/.local/state/quickshell/user/generated/colors.json'
 
-# GTK apps read gtk.css directly. hyprunity-theme-sync also writes its own
+# GTK apps read gtk.css directly. hexin-theme-sync also writes its own
 # named colours; these keep plain GTK apps in step with the wallpaper.
 [templates.gtk3]
 input_path = '~/.config/matugen/templates/gtk-3.0/gtk.css'

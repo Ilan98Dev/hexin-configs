@@ -1,11 +1,11 @@
 -- =====================================================================
 --  hyprland.lua — entry point
 --
---  The configuration is split across small files in hypr/hyprunity/ so
+--  The configuration is split across small files in hypr/hexin/ so
 --  each topic is easy to find. They load in the order listed below.
 --
---  Values owned by hyprunity's Settings → Hyprland page live in
---  hyprunity/settings.lua. That is the ONE file the app rewrites, so
+--  Values owned by hexin's Settings → Hyprland page live in
+--  hexin/settings.lua. That is the ONE file the app rewrites, so
 --  hand edits there are temporary; everything else is safe to edit.
 --
 --  Reload after editing:   hyprctl reload
@@ -16,7 +16,7 @@
 -- =====================================================================
 
 local HOME = os.getenv("HOME") or ""
-local DIR = HOME .. "/.config/hypr/hyprunity"
+local DIR = HOME .. "/.config/hypr/hexin"
 
 -- Diagnostics go to stderr: Hyprland runs with stdout on /dev/null, so a
 -- plain print() would vanish. stderr lands in the session log
@@ -24,9 +24,9 @@ local DIR = HOME .. "/.config/hypr/hyprunity"
 local function log(msg)
 	local out = io and io.stderr
 	if out then
-		out:write("[hyprunity] " .. msg .. "\n")
+		out:write("[hexin] " .. msg .. "\n")
 	else
-		print("[hyprunity] " .. msg)
+		print("[hexin] " .. msg)
 	end
 end
 
@@ -58,7 +58,7 @@ for _, name in ipairs(files) do
 	local chunk, err = loadfile(path)
 	if not chunk then
 		log("could not load " .. name .. ": " .. tostring(err))
-		error("[hyprunity] could not load " .. path .. ": " .. tostring(err))
+		error("[hexin] could not load " .. path .. ": " .. tostring(err))
 	end
 	-- Run it wrapped, so a runtime error names the file it came from
 	-- instead of only "hyprland.lua". The 0 level keeps Lua from
@@ -66,6 +66,6 @@ for _, name in ipairs(files) do
 	local ran, rerr = pcall(chunk, SETTINGS)
 	if not ran then
 		log("error in " .. name .. ": " .. tostring(rerr))
-		error("[hyprunity] error in " .. name .. ": " .. tostring(rerr), 0)
+		error("[hexin] error in " .. name .. ": " .. tostring(rerr), 0)
 	end
 end
