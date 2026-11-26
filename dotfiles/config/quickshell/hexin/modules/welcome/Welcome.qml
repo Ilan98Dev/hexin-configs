@@ -780,7 +780,7 @@ LazyLoader {
                                 Layout.fillWidth: true
                                 padding: 14
                                 border.width: 1
-                                border.color: Config.unityAgent.enabled ? Qt.alpha(Theme.accent, 0.55) : Theme.border
+                                border.color: Config.hexinAgent.enabled ? Qt.alpha(Theme.accent, 0.55) : Theme.border
 
                                 Behavior on border.color {
                                     ColorAnimation {
@@ -828,14 +828,14 @@ LazyLoader {
 
                                         Txt {
                                             Layout.alignment: Qt.AlignHCenter
-                                            text: Config.unityAgent.enabled ? "On" : "Off"
-                                            color: Config.unityAgent.enabled ? Theme.accent : Theme.subtext
+                                            text: Config.hexinAgent.enabled ? "On" : "Off"
+                                            color: Config.hexinAgent.enabled ? Theme.accent : Theme.subtext
                                             font.pixelSize: Theme.fontSmall
                                             font.bold: true
                                         }
                                         Toggle {
-                                            checked: Config.unityAgent.enabled
-                                            onToggled: v => Config.unityAgent.enabled = v
+                                            checked: Config.hexinAgent.enabled
+                                            onToggled: v => Config.hexinAgent.enabled = v
                                         }
                                     }
                                 }
@@ -855,9 +855,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Projects"
                                     description: "Create and build coding projects"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.projects
-                                    onToggled: v => Config.unityAgent.projects = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.projects
+                                    onToggled: v => Config.hexinAgent.projects = v
                                 }
                                 FeatureRow {
                                     Layout.fillWidth: true
@@ -866,9 +866,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Commands"
                                     description: "Run shell commands with approval"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.commands
-                                    onToggled: v => Config.unityAgent.commands = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.commands
+                                    onToggled: v => Config.hexinAgent.commands = v
                                 }
                                 FeatureRow {
                                     Layout.fillWidth: true
@@ -877,9 +877,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Files"
                                     description: "Write and edit files with approval"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.files
-                                    onToggled: v => Config.unityAgent.files = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.files
+                                    onToggled: v => Config.hexinAgent.files = v
                                 }
                                 FeatureRow {
                                     Layout.fillWidth: true
@@ -888,9 +888,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Packages"
                                     description: "Install or remove packages"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.packages
-                                    onToggled: v => Config.unityAgent.packages = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.packages
+                                    onToggled: v => Config.hexinAgent.packages = v
                                 }
                                 FeatureRow {
                                     Layout.fillWidth: true
@@ -899,9 +899,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Weekly updates"
                                     description: "Read-only package-update check"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.weeklyUpdates
-                                    onToggled: v => Config.unityAgent.weeklyUpdates = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.weeklyUpdates
+                                    onToggled: v => Config.hexinAgent.weeklyUpdates = v
                                 }
                                 FeatureRow {
                                     Layout.fillWidth: true
@@ -910,9 +910,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Web"
                                     description: "Search the web and fetch pages"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.web
-                                    onToggled: v => Config.unityAgent.web = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.web
+                                    onToggled: v => Config.hexinAgent.web = v
                                 }
                                 FeatureRow {
                                     Layout.fillWidth: true
@@ -921,9 +921,9 @@ LazyLoader {
                                     Layout.minimumHeight: 54
                                     title: "Screenshots"
                                     description: "Capture the screen when asked"
-                                    available: Config.unityAgent.enabled
-                                    checked: Config.unityAgent.screenshots
-                                    onToggled: v => Config.unityAgent.screenshots = v
+                                    available: Config.hexinAgent.enabled
+                                    checked: Config.hexinAgent.screenshots
+                                    onToggled: v => Config.hexinAgent.screenshots = v
                                 }
 
                                 Card {

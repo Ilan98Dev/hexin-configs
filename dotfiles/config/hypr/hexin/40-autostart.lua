@@ -61,8 +61,8 @@ hl.on("hyprland.start", function()
 		end
 		local text = file:read("*a")
 		file:close()
-		-- settings.json is written by the shell; the unityAgent object is flat.
-		local agent = text:match('"unityAgent"%s*:%s*(%b{})')
+		-- settings.json is written by the shell; the hexinAgent object is flat.
+		local agent = text:match('"hexinAgent"%s*:%s*(%b{})')
 		if not agent then
 			return true
 		end

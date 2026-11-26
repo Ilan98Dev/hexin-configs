@@ -36,7 +36,7 @@ Singleton {
     property alias hyprland: adapter.hyprland
     property alias apps: adapter.apps
     property alias general: adapter.general
-    property alias unityAgent: adapter.unityAgent
+    property alias hexinAgent: adapter.hexinAgent
 
     function resetAll() {
         resetting = true;
@@ -220,7 +220,7 @@ Singleton {
             // credentials: the API key and model live in the agent's own state
             // file. The daemon receives them with every request and removes or
             // refuses the matching tools.
-            property JsonObject unityAgent: JsonObject {
+            property JsonObject hexinAgent: JsonObject {
                 property bool enabled: true          // universal off switch
                 property bool projects: true         // create_project + project cwd
                 property bool commands: true         // run_command

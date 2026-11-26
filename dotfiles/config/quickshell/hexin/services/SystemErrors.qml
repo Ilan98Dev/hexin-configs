@@ -18,7 +18,7 @@ import qs.config
 Singleton {
     id: root
 
-    readonly property bool watching: Config.unityAgent.enabled && Config.unityAgent.systemErrors
+    readonly property bool watching: Config.hexinAgent.enabled && Config.hexinAgent.systemErrors
     readonly property int maxErrors: 25
     readonly property string stateDir: {
         const base = Quickshell.env("XDG_STATE_HOME");

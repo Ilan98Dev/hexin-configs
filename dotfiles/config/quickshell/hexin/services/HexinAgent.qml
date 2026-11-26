@@ -52,7 +52,7 @@ Singleton {
     // Settings > HexinAgent owns these switches. The daemon gets the same
     // feature map with every request, so turning a feature off here also
     // removes or refuses its tools instead of only hiding UI.
-    readonly property bool enabled: Config.unityAgent.enabled
+    readonly property bool enabled: Config.hexinAgent.enabled
     onEnabledChanged: {
         if (!enabled && busy)
             stop();
@@ -62,32 +62,32 @@ Singleton {
             ensureDaemon();
     }
     readonly property var features: ({
-            projects: Config.unityAgent.projects,
-            commands: Config.unityAgent.commands,
-            files: Config.unityAgent.files,
-            packages: Config.unityAgent.packages,
-            weeklyUpdates: Config.unityAgent.weeklyUpdates,
-            web: Config.unityAgent.web,
-            screenshots: Config.unityAgent.screenshots,
-            mouse: Config.unityAgent.mouse
+            projects: Config.hexinAgent.projects,
+            commands: Config.hexinAgent.commands,
+            files: Config.hexinAgent.files,
+            packages: Config.hexinAgent.packages,
+            weeklyUpdates: Config.hexinAgent.weeklyUpdates,
+            web: Config.hexinAgent.web,
+            screenshots: Config.hexinAgent.screenshots,
+            mouse: Config.hexinAgent.mouse
         })
     readonly property string featureContext: {
         if (!enabled)
             return "The user turned HexinAgent off in Settings > HexinAgent. Do not answer or run tools.";
         const off = [];
-        if (!Config.unityAgent.projects)
+        if (!Config.hexinAgent.projects)
             off.push("creating coding projects");
-        if (!Config.unityAgent.commands)
+        if (!Config.hexinAgent.commands)
             off.push("running shell commands");
-        if (!Config.unityAgent.files)
+        if (!Config.hexinAgent.files)
             off.push("writing or editing files");
-        if (!Config.unityAgent.packages)
+        if (!Config.hexinAgent.packages)
             off.push("installing or removing packages");
-        if (!Config.unityAgent.web)
+        if (!Config.hexinAgent.web)
             off.push("web search and page fetching");
-        if (!Config.unityAgent.screenshots)
+        if (!Config.hexinAgent.screenshots)
             off.push("taking screenshots");
-        if (!Config.unityAgent.mouse)
+        if (!Config.hexinAgent.mouse)
             off.push("moving, clicking or scrolling the mouse");
         if (!off.length)
             return "";
@@ -382,7 +382,7 @@ Singleton {
     // ───────────── weekly update check ─────────────
 
     function maybeWeeklyUpdate() {
-        if (!enabled || !Config.unityAgent.weeklyUpdates || updateCheckRunning)
+        if (!enabled || !Config.hexinAgent.weeklyUpdates || updateCheckRunning)
             return
         if (!settingsLoaded)
             return
@@ -684,7 +684,7 @@ Singleton {
 
     function approveCommand(code) {
         const command = (code || "").trim()
-        if (!command.length || runningCommand || !enabled || !Config.unityAgent.commands)
+        if (!command.length || runningCommand || !enabled || !Config.hexinAgent.commands)
             return
         if (activeIndex < 0)
             newChat()
@@ -1432,7 +1432,7 @@ Singleton {
         id: weeklyUpdateTimer
         interval: 6 * 60 * 60 * 1000
         repeat: true
-        running: root.enabled && Config.unityAgent.weeklyUpdates
+        running: root.enabled && Config.hexinAgent.weeklyUpdates
         onTriggered: root.maybeWeeklyUpdate()
     }
 
@@ -1440,7 +1440,7 @@ Singleton {
         id: weeklyUpdateBoot
         interval: 25000
         repeat: false
-        running: root.enabled && Config.unityAgent.weeklyUpdates
+        running: root.enabled && Config.hexinAgent.weeklyUpdates
         onTriggered: root.maybeWeeklyUpdate()
     }
 

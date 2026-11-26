@@ -13,7 +13,7 @@ import qs.components
 SettingsPage {
     id: root
 
-    readonly property var ua: Config.unityAgent
+    readonly property var ua: Config.hexinAgent
     readonly property bool agentOn: ua.enabled
     readonly property real lastCheck: (HexinAgent.settings.lastUpdateCheck || 0)
 
