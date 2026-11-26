@@ -103,7 +103,7 @@ SettingsPage {
 
     SettingRow {
         title: "Launcher button glyph"
-        description: "Leave empty to show the UnityOS star image. Any glyph here replaces the image in the bar."
+        description: "Leave empty to show the Hexin star image. Any glyph here replaces the image in the bar."
 
         RowLayout {
             spacing: 8

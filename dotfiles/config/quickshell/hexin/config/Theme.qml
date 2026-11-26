@@ -17,7 +17,7 @@ Singleton {
         })
 
     readonly property var presets: ({
-            "UnityOS": {
+            "Hexin": {
                 base: "#121118", mantle: "#1a1924", surface: "#262335", surfaceHi: "#332f45",
                 text: "#F3F4F6", subtext: "#9CA3AF", accent: "#F97316",
                 red: "#ef4444", green: "#22c55e", yellow: "#EAB308", blue: "#7C3AED"
@@ -132,15 +132,15 @@ Singleton {
         onTriggered: Quickshell.execDetached([themeSyncBin])
     }
 
-    function switchToUnityOS() {
-        Config.appearance.preset = "UnityOS";
+    function switchToHexin() {
+        Config.appearance.preset = "Hexin";
         syncTimer.restart();
     }
 
     onIsDefaultWallpaperChanged: {
         if (!ready || !Config.isLoaded) return;
         if (isDefaultWallpaper && appearancePreset === "Auto (Matugen)") {
-            switchToUnityOS();
+            switchToHexin();
         }
     }
 
@@ -246,7 +246,7 @@ Singleton {
         onTriggered: {
             root.ready = true;
             if (isDefaultWallpaper && appearancePreset === "Auto (Matugen)") {
-                switchToUnityOS();
+                switchToHexin();
             }
         }
     }

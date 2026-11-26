@@ -40,7 +40,7 @@ check "quickshell tree matches repo" 'diff -r "$REPO/dotfiles/config/quickshell/
 check "hyprland.lua installed" '[ -f "$FAKE/.config/hypr/hyprland.lua" ]'
 check "hypr lua tree matches repo" 'diff -r "$REPO/dotfiles/config/hypr/hexin" "$FAKE/.config/hypr/hexin" >/dev/null'
 check "settings.json installed" '[ -f "$FAKE/.config/hexin/settings.json" ]'
-check "shipped preset is UnityOS" 'grep -q "\"preset\": \"UnityOS\"" "$FAKE/.config/hexin/settings.json"'
+check "shipped preset is Hexin" 'grep -q "\"preset\": \"Hexin\"" "$FAKE/.config/hexin/settings.json"'
 check "shipped welcomeSeen is false" 'grep -q "\"welcomeSeen\": false" "$FAKE/.config/hexin/settings.json"'
 check "matugen templates installed" '[ -d "$FAKE/.config/matugen" ]'
 check "helper scripts executable" '[ -x "$FAKE/.local/bin/hexin-theme-sync" ] && [ -x "$FAKE/.local/bin/hexin-matugen-apply" ]'

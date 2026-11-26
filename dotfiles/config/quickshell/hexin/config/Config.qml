@@ -48,6 +48,10 @@ Singleton {
     // by the bundled picture, so fold the old value forward when the file
     // loads (the adapter write below is debounced like any other edit).
     function migrate() {
+        // The house palette used to be called UnityOS; keep old settings files
+        // working after the rename.
+        if (appearance.preset === "UnityOS")
+            appearance.preset = "Hexin";
         if (wallpaper.type === "art")
             wallpaper.type = "default";
         // The launcher used to ship with the Arch glyph. That glyph now means
@@ -95,8 +99,8 @@ Singleton {
             id: adapter
 
             property JsonObject appearance: JsonObject {
-                // "UnityOS" is the house palette; other presets ship too.
-                property string preset: "UnityOS"
+                // "Hexin" is the house palette; other presets ship too.
+                property string preset: "Hexin"
                 property string accent: ""          // "" = use the preset's accent
                 property real opacity: 0.92
                 property int radius: 14
@@ -114,7 +118,7 @@ Singleton {
                 property int height: 38
                 property int margin: 6
                 property bool showLauncher: true
-                // Empty = use the UnityOS star image. A glyph here replaces the
+                // Empty = use the Hexin star image. A glyph here replaces the
                 // image in the bar launcher button.
                 property string launcherIcon: ""
                 property bool showWorkspaces: true

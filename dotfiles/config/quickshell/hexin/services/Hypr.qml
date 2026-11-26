@@ -31,7 +31,7 @@ Singleton {
     // ~/.config/hypr/hexin/settings.lua — loaded by ~/.config/hypr/hyprland.lua
     readonly property string confPath: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/hypr/hexin/settings.lua"
 
-    /// Inactive window border — the muted slate from the UnityOS palette.
+    /// Inactive window border — the muted slate from the Hexin palette.
     readonly property string inactiveBorder: "rgba(44464f77)"
     /// The active border used when accent borders are switched off. Matches
     /// the fallback in ~/.config/hypr/hexin/50-look-and-feel.lua.

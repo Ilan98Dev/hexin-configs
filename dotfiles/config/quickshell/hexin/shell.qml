@@ -3,7 +3,7 @@
 //@ pragma Env QS_NO_RELOAD_POPUP=1
 
 // =====================================================================
-//  hexin — a Quickshell desktop shell for UnityOS / Hyprland.
+//  hexin — a Quickshell desktop shell for Hexin / Hyprland.
 //
 //  Surfaces
 //    Bar                top/bottom bar, one per monitor

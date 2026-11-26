@@ -1,7 +1,7 @@
 import QtQuick
 import qs.config
 
-// The UnityOS brand mark.
+// The Hexin brand mark.
 //
 // By default it draws the bundled star logo (assets/logo.png). Callers that
 // have their own "ASCII" logo can pass `useImage: false` and a `glyph`; the bar

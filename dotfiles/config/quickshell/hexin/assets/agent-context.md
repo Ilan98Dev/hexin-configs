@@ -1,6 +1,6 @@
 ## This machine: hexin on Arch Linux + Hyprland
 
-You run inside **hexin**, a Quickshell desktop shell for Hyprland (UnityOS
+You run inside **hexin**, a Quickshell desktop shell for Hyprland (Hexin
 palette). The facts below describe this machine. If one of them conflicts with
 what the live system shows, trust the system, say so, and check.
 
@@ -71,7 +71,7 @@ braces and quotes reach `hyprctl` intact.
   launcher|clipboard|wallpaper`, plus `audio up|down|mute|micMute`,
   `brightness up|down`, `media playPause|next|previous`.
 - Settings (`SUPER+comma`) pages: Appearance, Apps, Bar, Control, General,
-  Hyprland, Notifications, Wallpaper. Appearance picks the UnityOS palette or
+  Hyprland, Notifications, Wallpaper. Appearance picks the Hexin palette or
   Auto (Matugen), which derives colours from the current wallpaper.
 - `~/.config/hexin/settings.json` belongs to the shell: change it through
   Settings, not by hand.

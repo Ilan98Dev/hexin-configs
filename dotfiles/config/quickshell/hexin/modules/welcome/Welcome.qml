@@ -65,7 +65,7 @@ LazyLoader {
 
             // Presets and accents offered by the personalisation page.
             readonly property var tourPresets: [
-                "UnityOS",
+                "Hexin",
                 "Catppuccin Mocha",
                 "Tokyo Night",
                 "Gruvbox",

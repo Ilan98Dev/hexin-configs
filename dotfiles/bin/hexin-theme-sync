@@ -11,14 +11,17 @@ import json, sys
 try:
     d = json.load(open(sys.argv[1]))
     a = d.get("appearance", {})
-    print(a.get("preset", "UnityOS"))
+    preset = a.get("preset", "Hexin")
+    if preset == "UnityOS":        # name used before the Hexin rename
+        preset = "Hexin"
+    print(preset)
     print(a.get("accent", "") or "")
 except Exception:
-    print("UnityOS")
+    print("Hexin")
     print("")
 PY
 )
-PRESET="${META[0]:-UnityOS}"
+PRESET="${META[0]:-Hexin}"
 ACCENT="${META[1]:-}"
 
 load_matugen() {

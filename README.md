@@ -5,7 +5,7 @@
 <h1 align="center">hexin</h1>
 
 <p align="center">
-  A complete Quickshell desktop for <b>UnityOS / Hyprland</b> — bar, control centre,
+  A complete Quickshell desktop for <b>Hexin / Hyprland</b> — bar, control centre,
   notifications, launcher, lock screen, settings app and an AI agent, in one config.
 </p>
 
@@ -13,7 +13,7 @@
 
 hexin replaces the usual pile of desktop tools (waybar, fuzzel, swaync, wlogout,
 hyprlock, …) with a single Quickshell configuration and a small, readable Hyprland
-Lua config. It is built around the UnityOS palette: dark violet surfaces, an orange
+Lua config. It is built around the Hexin palette: dark violet surfaces, an orange
 accent and purple highlights.
 
 Everything is live-configurable from the built-in Settings app, scriptable over IPC,
@@ -41,7 +41,7 @@ commands, install packages and diagnose crashes — always behind an approval ca
 - **Lock screen** — a real `ext-session-lock` surface with PAM authentication.
 - **Settings app** — appearance, wallpaper, bar layout, notifications, control centre,
   Hyprland decoration, commands, HexinAgent and general options. Changes apply live.
-- **Theme presets** — UnityOS, Catppuccin (Mocha/Latte), Tokyo Night, Gruvbox, Nord,
+- **Theme presets** — Hexin, Catppuccin (Mocha/Latte), Tokyo Night, Gruvbox, Nord,
   Rosé Pine, Dracula, plus **Auto (Matugen)** to derive the palette from the wallpaper.
 - **System error watcher** — notices new `coredumpctl` crashes and failed systemd units,
   with a **Fix with AI** button that opens HexinAgent with the details filled in.
@@ -311,8 +311,8 @@ for a true reset.
 ## Credits
 
 Built on [Quickshell](https://quickshell.org) and [Hyprland](https://hyprland.org).
-Some code snippets are adapted from [Ryoku](https://ryoku.dev). The UnityOS
-palette and branding belong to the UnityOS project. Package names and defaults
+Some code snippets are adapted from [Ryoku](https://ryoku.dev). The Hexin
+palette and branding belong to the Hexin project. Package names and defaults
 target Arch Linux.
 
 ## License
